@@ -5,28 +5,28 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<script src="js/mk-storage.js?v=miku20"></script>
-<script src="js/mk-config.js?v=miku20"></script>
+<script src="js/mk-storage.js?v=miku21"></script>
+<script src="js/mk-config.js?v=miku21"></script>
 <script>try{var mkT=localStorage.getItem('order_ui_theme_v1')==='light'?'light':'dark';if(localStorage.getItem('mk_auto_theme_v1')==='1'){var mkH=new Date().getHours();mkT=mkH>=6&&mkH<18?'light':'dark';localStorage.setItem('order_ui_theme_v1',mkT);}document.documentElement.setAttribute('data-prod-theme',mkT);}catch(e){}</script>
-<link rel="stylesheet" href="css/style.css?v=miku20">
-<link rel="stylesheet" href="css/theme-light.css?v=miku20">
-<link rel="stylesheet" href="css/sunshine.css?v=miku20">
+<link rel="stylesheet" href="css/style.css?v=miku21">
+<link rel="stylesheet" href="css/theme-light.css?v=miku21">
+<link rel="stylesheet" href="css/sunshine.css?v=miku21">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600&family=M+PLUS+Rounded+1c:wght@500;700;800&display=swap">
-<link rel="stylesheet" href="css/miku.css?v=miku20">
+<link rel="stylesheet" href="css/miku.css?v=miku21">
 
-<link rel="stylesheet" href="css/mk-fx.css?v=miku20">
-<link rel="stylesheet" href="css/mk-fx2.css?v=miku20">
-<link rel="stylesheet" href="css/mk-3d.css?v=miku20">
-<link rel="stylesheet" href="css/mk-stage.css?v=miku20">
-<link rel="stylesheet" href="css/mk-native.css?v=miku20">
-<link rel="stylesheet" href="css/mk-producer.css?v=miku20">
-<link rel="stylesheet" href="css/mk-buddy.css?v=miku20">
-<link rel="stylesheet" href="css/mk-studio.css?v=miku20">
-<link rel="stylesheet" href="css/mk-epic.css?v=miku20">
-<link rel="stylesheet" href="css/mk-extra.css?v=miku20">
+<link rel="stylesheet" href="css/mk-fx.css?v=miku21">
+<link rel="stylesheet" href="css/mk-fx2.css?v=miku21">
+<link rel="stylesheet" href="css/mk-3d.css?v=miku21">
+<link rel="stylesheet" href="css/mk-stage.css?v=miku21">
+<link rel="stylesheet" href="css/mk-native.css?v=miku21">
+<link rel="stylesheet" href="css/mk-producer.css?v=miku21">
+<link rel="stylesheet" href="css/mk-buddy.css?v=miku21">
+<link rel="stylesheet" href="css/mk-studio.css?v=miku21">
+<link rel="stylesheet" href="css/mk-epic.css?v=miku21">
+<link rel="stylesheet" href="css/mk-extra.css?v=miku21">
 <title>HATSUNE MIKU — จัดการออเดอร์และสต็อก</title>
-<link rel="icon" type="image/png" href="img/favicon-miku.png?v=miku20">
-<link rel="alternate icon" href="favicon.svg?v=miku20">
+<link rel="icon" type="image/png" href="img/favicon-miku.png?v=miku21">
+<link rel="alternate icon" href="favicon.svg?v=miku21">
 <script src="js/vendor/xlsx.full.min.js"></script>
 <script src="js/vendor/jszip.min.js"></script>
 <!-- html2pdf และ ExcelJS โหลดทีหลังผ่าน js/lazy-lib.js -->
@@ -38,7 +38,7 @@
 <body>
 <div class="shell">
   <div class="top">
-    <h1><span class="brand-mark mk-logo"><img class="mk-logo-night" src="img/logo-night.png?v=miku20" alt="" width="44" height="44" draggable="false"><img class="mk-logo-day" src="img/logo-day.png?v=miku20" alt="" width="44" height="44" draggable="false"></span><span class="brand-copy"><b class="mk-brand-logo"><img src="img/miku-logo.png?v=miku20" alt="HATSUNE MIKU" width="86" height="37" draggable="false"></b><small>จัดการออเดอร์และสต็อก</small></span></h1>
+    <h1><span class="brand-mark mk-logo"><img class="mk-logo-night" src="img/logo-night.png?v=miku21" alt="" width="44" height="44" draggable="false"><img class="mk-logo-day" src="img/logo-day.png?v=miku21" alt="" width="44" height="44" draggable="false"></span><span class="brand-copy"><b class="mk-brand-logo"><img src="img/miku-logo.png?v=miku21" alt="HATSUNE MIKU" width="86" height="37" draggable="false"></b><small>จัดการออเดอร์และสต็อก</small></span></h1>
     <button type="button" class="side-collapse" id="sideCollapseLeft" data-side="left" title="ย่อเมนู" aria-label="ย่อหรือขยายเมนูด้านซ้าย" aria-pressed="false">
       <svg class="ic-close" viewBox="0 0 24 24" aria-hidden="true"><path d="m11 17-5-5 5-5"/><path d="m18 17-5-5 5-5"/></svg>
       <svg class="ic-open" viewBox="0 0 24 24" aria-hidden="true"><path d="m13 17 5-5-5-5"/><path d="m6 17 5-5-5-5"/></svg>
@@ -53,8 +53,8 @@
       <button class="tab" data-tool="summaryTool"><span class="nav-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span><span>สรุปงาน</span></button>
     </div>
     <div class="theme-switch" role="group" aria-label="โหมดสี">
-      <button type="button" class="theme-opt mk-stone-btn" data-theme-choice="light" aria-pressed="false" title="กลางวัน — HATSUNE MIKU"><img class="mk-stone mk-stone-day" src="img/note-crystal.png?v=miku20" alt="" width="26" height="26" draggable="false"><span>กลางวัน</span></button>
-      <button type="button" class="theme-opt mk-stone-btn" data-theme-choice="dark" aria-pressed="true" title="กลางคืน — MIKU NIGHT LIVE"><img class="mk-stone mk-stone-night" src="img/note-crystal.png?v=miku20" alt="" width="26" height="26" draggable="false"><span>กลางคืน</span></button>
+      <button type="button" class="theme-opt mk-stone-btn" data-theme-choice="light" aria-pressed="false" title="กลางวัน — HATSUNE MIKU"><img class="mk-stone mk-stone-day" src="img/note-crystal.png?v=miku21" alt="" width="26" height="26" draggable="false"><span>กลางวัน</span></button>
+      <button type="button" class="theme-opt mk-stone-btn" data-theme-choice="dark" aria-pressed="true" title="กลางคืน — MIKU NIGHT LIVE"><img class="mk-stone mk-stone-night" src="img/note-crystal.png?v=miku21" alt="" width="26" height="26" draggable="false"><span>กลางคืน</span></button>
     </div>
   </div>
 
@@ -608,32 +608,32 @@
   setTimeout(sync,50);
 })();
 </script>
-<script src="js/lazy-lib.js?v=miku20"></script>
-<script src="js/move-rules.js?v=miku20"></script>
-<script src="js/app.js?v=miku20"></script>
-<script src="js/scan-sheet.js?v=miku20"></script>
-<script src="js/saved-files.js?v=miku20"></script>
-<script src="js/auto-order.js?v=miku20"></script>
-<script src="js/layout.js?v=miku20"></script>
-<script src="js/mk-fx.js?v=miku20"></script>
-<script src="js/mk-fx2.js?v=miku20"></script>
-<script src="js/mk-3d.js?v=miku20"></script>
-<script src="js/mk-studio.js?v=miku20"></script>
-<script src="js/mk-stage.js?v=miku20"></script>
-<script src="js/mk-picker.js?v=miku20"></script>
-<script src="js/mk-producer.js?v=miku20"></script>
-<script src="js/mk-buddy.js?v=miku20"></script>
-<script src="js/mk-battle.js?v=miku20"></script>
-<script src="js/mk-skucard.js?v=miku20"></script>
-<script src="js/mk-online.js?v=miku20"></script>
-<script src="js/mk-epic.js?v=miku20"></script>
-<script src="js/mk-settings.js?v=miku20"></script>
-<script src="js/mk-progress.js?v=miku20"></script>
-<script src="js/mk-extra.js?v=miku20"></script>
-<script src="js/mk-world.js?v=miku20"></script>
+<script src="js/lazy-lib.js?v=miku21"></script>
+<script src="js/move-rules.js?v=miku21"></script>
+<script src="js/app.js?v=miku21"></script>
+<script src="js/scan-sheet.js?v=miku21"></script>
+<script src="js/saved-files.js?v=miku21"></script>
+<script src="js/auto-order.js?v=miku21"></script>
+<script src="js/layout.js?v=miku21"></script>
+<script src="js/mk-fx.js?v=miku21"></script>
+<script src="js/mk-fx2.js?v=miku21"></script>
+<script src="js/mk-3d.js?v=miku21"></script>
+<script src="js/mk-studio.js?v=miku21"></script>
+<script src="js/mk-stage.js?v=miku21"></script>
+<script src="js/mk-picker.js?v=miku21"></script>
+<script src="js/mk-producer.js?v=miku21"></script>
+<script src="js/mk-buddy.js?v=miku21"></script>
+<script src="js/mk-battle.js?v=miku21"></script>
+<script src="js/mk-skucard.js?v=miku21"></script>
+<script src="js/mk-online.js?v=miku21"></script>
+<script src="js/mk-epic.js?v=miku21"></script>
+<script src="js/mk-settings.js?v=miku21"></script>
+<script src="js/mk-progress.js?v=miku21"></script>
+<script src="js/mk-extra.js?v=miku21"></script>
+<script src="js/mk-world.js?v=miku21"></script>
 <!-- Sunshine: ไลบรารี Supabase เก็บในเครื่องแล้ว แต่การดึง/อัปโหลดข้อมูลยังต้องต่ออินเทอร์เน็ต -->
 <script src="js/vendor/supabase.min.js"></script>
-<script src="js/sunshine.js?v=miku20"></script>
+<script src="js/sunshine.js?v=miku21"></script>
 <div class="mk-credit mk-app-credit" title="ภาพตัวละครใช้ตามสัญญาอนุญาต CC BY-NC 3.0 ของ Crypton Future Media">Hatsune Miku © Crypton Future Media, INC. 2007 · Art by KEI · <a href="https://piapro.net/intl/en_for_creators.html" target="_blank" rel="noopener">CC BY-NC 3.0</a></div>
 </body>
 

@@ -519,3 +519,22 @@ html[data-prod-theme] body .mk-radio-list button.is-on{ background:linear-gradie
 /* เพลย์ลิสต์: ห้ามส่วนต่างๆ ถูกบีบจนซ้อนกันตอนจอเตี้ย (ให้เลื่อนในแถบแทน) */
 html[data-prod-theme] body .shell > .top:not(.side-right) > *{ flex-shrink:0; }
 html[data-prod-theme] body .shell > .top:not(.side-right) h1{ height:auto!important; }
+
+/* MIKU RADIO แบบหุบ: เหลือจอวิดีโอ 200×200 (ขั้นต่ำตามข้อกำหนด YouTube) + ชื่อเพลง 1 บรรทัด + ปุ่มเล่น/ข้าม */
+.mk-radio-btns{ display:flex; gap:6px; }
+html[data-prod-theme] body .mk-radio-min{ width:26px!important; height:26px!important; min-height:0!important; padding:0!important; border:0!important; background:var(--surface-3)!important; color:var(--muted)!important; font-size:13px!important; line-height:1!important; }
+.mk-radio.is-mini{ width:224px; padding:8px 12px 10px; }
+.mk-radio.is-mini .mk-radio-head{ margin-bottom:6px; }
+.mk-radio.is-mini .mk-radio-head b{ font-size:11px; letter-spacing:.1em; }
+.mk-radio.is-mini .mk-radio-screen{ width:200px; height:200px; border-radius:12px; }
+.mk-radio.is-mini .mk-radio-cover img{ width:120px; }
+.mk-radio.is-mini .mk-radio-now{ min-height:0; margin:6px 2px 6px; }
+.mk-radio.is-mini .mk-radio-now b{ font-size:12.5px; }
+.mk-radio.is-mini .mk-radio-now small,
+.mk-radio.is-mini .mk-radio-note,
+.mk-radio.is-mini .mk-radio-list,
+.mk-radio.is-mini .mk-radio-ctl [data-a="shuffle"],
+.mk-radio.is-mini .mk-radio-ctl [data-a="list"]{ display:none!important; }
+.mk-radio.is-mini .mk-radio-ctl{ justify-content:center; gap:10px; }
+html[data-prod-theme] body .mk-radio.is-mini .mk-radio-ctl button{ width:32px!important; height:32px!important; font-size:13px!important; }
+html[data-prod-theme] body .mk-radio.is-mini .mk-radio-ctl .mk-radio-play{ width:40px!important; height:40px!important; font-size:16px!important; }
