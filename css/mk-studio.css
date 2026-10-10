@@ -1,0 +1,521 @@
+/* MIKU STUDIO — สกินและเค้าโครงทั้งแอป (คู่กับ js/mk-studio.js) · โหลดหลังไฟล์ CSS หลักทั้งหมด
+   - แถบซ้าย = เพลย์ลิสต์: แท็บเป็นแทร็กเพลง (TRACK 01…) แท็บที่เปิดอยู่มีอีควอไลเซอร์ขยับ · ด้านล่างมีมิกุยืน · ย่อได้เหลือแต่ไอคอน
+   - หัวหน้า = การ์ด NOW PLAYING (ปกเพลง + คลื่นเสียง + มิกุโผล่ขวา) · ใต้การ์ด = ชิปตัวเลข
+   - SETLIST = ขั้นตอนเรียงเป็นแถวการ์ด · ON STAGE = ผลลัพธ์เต็มความกว้าง
+   - การ์ดมุมโค้งมน แถบไล่สีมิ้นต์→ชมพูด้านบน · ปุ่มทรงแคปซูล · พื้นหลังบรรทัดโน้ต + โน้ตลอยจางๆ
+   ใช้ !important เพราะ CSS เดิมใช้ !important เยอะ */
+
+/* ================= ตัวอักษร ================= */
+html[data-prod-theme] body, html[data-prod-theme] body button, html[data-prod-theme] body input, html[data-prod-theme] body select, html[data-prod-theme] body textarea, html[data-prod-theme] body table{
+  font-family:'Mitr','Leelawadee UI','Segoe UI',Tahoma,sans-serif!important;
+  font-weight:400;
+  letter-spacing:0!important;
+}
+html[data-prod-theme] body h1, html[data-prod-theme] body h2, html[data-prod-theme] body h3, html[data-prod-theme] body h4, html[data-prod-theme] body th, .ms-title, .ms-label span, .ms-track, .ms-num, .tab span{
+  font-family:'M PLUS Rounded 1c','Mitr','Leelawadee UI',Tahoma,sans-serif!important;
+}
+
+/* ================= พื้นหลัง: บรรทัดโน้ต + โน้ตลอย ================= */
+html[data-prod-theme] body{
+  background-color:var(--background)!important;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='220' viewBox='0 0 260 220'%3E%3Cg fill='%2339c5bb' fill-opacity='.10'%3E%3Cellipse cx='40' cy='60' rx='9' ry='6.5' transform='rotate(-22 40 60)'/%3E%3Crect x='47' y='22' width='2.6' height='38'/%3E%3Cellipse cx='190' cy='150' rx='9' ry='6.5' transform='rotate(-22 190 150)'/%3E%3Cellipse cx='222' cy='140' rx='9' ry='6.5' transform='rotate(-22 222 140)'/%3E%3Crect x='197' y='112' width='2.6' height='38'/%3E%3Crect x='229' y='102' width='2.6' height='38'/%3E%3Cpath d='M197 112 L231.6 102 L231.6 108 L197 118Z'/%3E%3C/g%3E%3Cg fill='%23e12885' fill-opacity='.07'%3E%3Cellipse cx='120' cy='190' rx='7' ry='5' transform='rotate(-22 120 190)'/%3E%3Crect x='125.5' y='160' width='2.2' height='30'/%3E%3C/g%3E%3C/svg%3E"),
+    repeating-linear-gradient(180deg, transparent 0 22px, color-mix(in srgb, var(--accent) 7%, transparent) 22px 23px, transparent 23px 30px, color-mix(in srgb, var(--accent) 7%, transparent) 30px 31px, transparent 31px 38px, color-mix(in srgb, var(--accent) 7%, transparent) 38px 39px, transparent 39px 46px, color-mix(in srgb, var(--accent) 7%, transparent) 46px 47px, transparent 47px 54px, color-mix(in srgb, var(--accent) 7%, transparent) 54px 55px, transparent 55px 160px),
+    radial-gradient(1100px 600px at 100% 0%, color-mix(in srgb, var(--mk-ribbon-b) 9%, transparent), transparent 65%),
+    radial-gradient(900px 700px at 0% 100%, color-mix(in srgb, var(--mk-ribbon-a) 12%, transparent), transparent 65%)!important;
+  background-attachment:fixed!important;
+}
+::selection{ background:color-mix(in srgb, var(--mk-ribbon-b) 35%, transparent); }
+
+/* ================= โครงหน้า ================= */
+html[data-prod-theme] body .shell{
+  display:grid!important;
+  grid-template-columns:264px minmax(0,1fr)!important;
+  background:transparent!important;
+  min-height:100vh;
+}
+html[data-prod-theme] body.collapse-left .shell{ grid-template-columns:84px minmax(0,1fr)!important; }
+html[data-prod-theme] body .page-heading{ display:none!important; }
+html[data-prod-theme] body .panel-wrap{
+  max-width:1600px; width:100%; box-sizing:border-box;
+  margin:0 auto!important;
+  padding:24px 32px 90px!important;
+}
+html[data-prod-theme] body.collapse-left .shell > .panel-wrap{ padding-left:32px!important; }
+html[data-prod-theme] body.collapse-right .shell > .panel-wrap{ padding-right:32px!important; }
+html[data-prod-theme] body.collapse-left .shell > .panel-wrap > .page-heading{ padding-left:0!important; }
+html[data-prod-theme] body .side-peek-left{ display:none!important; }
+
+/* ================= แถบซ้าย: เพลย์ลิสต์ ================= */
+html[data-prod-theme] body .shell > .top:not(.side-right){
+  position:sticky!important; top:0!important; z-index:80!important;
+  display:flex!important; flex-direction:column!important; align-items:stretch!important;
+  width:auto!important; height:100vh!important; box-sizing:border-box;
+  gap:10px!important; padding:18px 14px 0!important;
+  overflow:hidden auto!important;
+  border:0!important; border-radius:0!important;
+  border-right:1px solid var(--border)!important;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--surface) 92%, transparent), color-mix(in srgb, var(--surface-2) 96%, transparent))!important;
+  backdrop-filter:blur(14px);
+  box-shadow:6px 0 30px rgba(10,60,57,.08)!important;
+  scrollbar-width:none;
+}
+html[data-prod-theme] body .shell > .top:not(.side-right)::-webkit-scrollbar{ display:none; }
+html[data-prod-theme] body .shell > .top:not(.side-right) h1{
+  display:flex!important; flex-wrap:wrap; align-items:center; gap:10px!important;
+  margin:0!important; padding:4px 4px 12px!important; min-height:0!important;
+  border-bottom:1px dashed var(--border)!important;
+}
+html[data-prod-theme] body .brand-mark.mk-logo{
+  width:52px!important; height:52px!important; flex:0 0 52px; padding:0!important; margin:0!important;
+  border-radius:16px!important; border:0!important; overflow:hidden;
+  background:linear-gradient(135deg, var(--mk-ribbon-a), var(--mk-ribbon-b))!important;
+  box-shadow:0 6px 16px color-mix(in srgb, var(--mk-ribbon-a) 35%, transparent)!important;
+  outline:3px solid var(--surface); outline-offset:-3px;
+}
+html[data-prod-theme] body .brand-mark.mk-logo img{ width:100%; height:100%; object-fit:cover; display:block; border-radius:0; }
+html[data-prod-theme] body .brand-mark.mk-logo .mk-logo-day{ display:none; }
+html[data-prod-theme="light"] body .brand-mark.mk-logo .mk-logo-day{ display:block; }
+html[data-prod-theme="light"] body .brand-mark.mk-logo .mk-logo-night{ display:none; }
+html[data-prod-theme] body .brand-copy{ display:flex!important; flex-direction:column; gap:3px; min-width:0; }
+html[data-prod-theme] body .brand-copy b.mk-brand-logo img{ height:34px!important; filter:none!important; }
+html[data-prod-theme] body .brand-copy small{ color:var(--muted)!important; font-size:11px!important; letter-spacing:.02em!important; text-transform:none!important; opacity:1!important; }
+html[data-prod-theme] body .shell > .top:not(.side-right) .side-collapse{
+  display:inline-flex!important; align-items:center; justify-content:center; gap:6px;
+  height:30px!important; min-height:0!important; margin:0!important; padding:0 12px!important;
+  border:1px solid var(--border)!important; border-radius:999px!important;
+  background:var(--surface)!important; color:var(--muted)!important; font-size:12px!important;
+  box-shadow:none!important;
+}
+html[data-prod-theme] body .shell > .top:not(.side-right) .side-collapse svg{ width:14px!important; height:14px!important; stroke:currentColor!important; fill:none; }
+html[data-prod-theme] body .shell > .top:not(.side-right) .side-collapse:hover{ color:var(--accent)!important; border-color:var(--accent)!important; }
+
+html[data-prod-theme] body .shell > .top:not(.side-right) .tabs{
+  counter-reset:mstrack;
+  display:flex!important; flex-direction:column!important; gap:6px!important;
+  margin:4px 0 0!important; padding:0!important; overflow:visible!important; flex:0 0 auto;
+}
+html[data-prod-theme] body .shell > .top:not(.side-right) .tabs::before{
+  content:"PLAYLIST"; display:block; margin:2px 6px 4px;
+  font:800 10.5px/1 'M PLUS Rounded 1c',sans-serif; letter-spacing:.24em; color:var(--muted-2);
+}
+html[data-prod-theme] body .shell > .top:not(.side-right) .tab{
+  counter-increment:mstrack;
+  position:relative;
+  display:flex!important; flex-direction:row!important; align-items:center; gap:10px!important;
+  width:100%!important; height:50px!important; min-height:50px!important; box-sizing:border-box;
+  padding:0 12px 0 10px!important;
+  border:1px solid transparent!important; border-radius:16px!important;
+  background:transparent!important; color:var(--foreground)!important;
+  clip-path:none!important; box-shadow:none!important; opacity:1!important;
+  font-size:14.5px!important; font-weight:500!important; text-align:left;
+  transition:background .18s, transform .18s, border-color .18s;
+}
+html[data-prod-theme] body .shell > .top:not(.side-right) .tab::before{
+  content:counter(mstrack, decimal-leading-zero);
+  flex:0 0 22px; font:800 11px/1 'M PLUS Rounded 1c',sans-serif; color:var(--muted-2); letter-spacing:.04em;
+}
+html[data-prod-theme] body .shell > .top:not(.side-right) .tab .nav-ico{
+  flex:0 0 32px; width:32px!important; height:32px!important; display:grid!important; place-items:center;
+  margin:0!important; padding:0!important; border:0!important; border-radius:11px!important;
+  background:var(--accent-soft)!important; box-shadow:none!important;
+}
+html[data-prod-theme] body .shell > .top:not(.side-right) .tab .nav-ico svg{ width:17px!important; height:17px!important; stroke:var(--accent)!important; fill:none; }
+html[data-prod-theme] body .shell > .top:not(.side-right) .tab > span:last-child{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:inherit!important; }
+html[data-prod-theme] body .shell > .top:not(.side-right) .tab:hover{ background:var(--accent-soft)!important; transform:translateX(3px); }
+html[data-prod-theme] body .shell > .top:not(.side-right) .tabs .tab.active{
+  background:linear-gradient(120deg, var(--mk-ribbon-a), var(--mk-teal-2))!important;
+  color:#fff!important; font-weight:600!important;
+  box-shadow:0 8px 20px color-mix(in srgb, var(--mk-ribbon-a) 35%, transparent)!important;
+}
+html[data-prod-theme] body .shell > .top:not(.side-right) .tabs .tab.active::before{ color:rgba(255,255,255,.85); }
+html[data-prod-theme] body .shell > .top:not(.side-right) .tabs .tab.active .nav-ico{ background:rgba(255,255,255,.22)!important; }
+html[data-prod-theme] body .shell > .top:not(.side-right) .tabs .tab.active .nav-ico svg,
+html[data-prod-theme] body .shell > .top:not(.side-right) .tabs .tab.active *{ stroke:#fff!important; color:#fff!important; }
+/* อีควอไลเซอร์ของแทร็กที่กำลังเล่น */
+html[data-prod-theme] body .shell > .top:not(.side-right) .tabs .tab.active::after{
+  content:""; flex:0 0 16px; width:16px; height:16px;
+  background:linear-gradient(#fff 0 0) 0 100%/3px 60% no-repeat, linear-gradient(#fff 0 0) 6px 100%/3px 100% no-repeat, linear-gradient(#fff 0 0) 12px 100%/3px 40% no-repeat;
+  animation:msEq 0.9s ease-in-out infinite alternate;
+}
+@keyframes msEq{ to{ background-size:3px 30%, 3px 55%, 3px 100%; } }
+
+/* สวิตช์โหมด: แคปซูลสองช่อง */
+html[data-prod-theme] body .shell > .top:not(.side-right) .theme-switch{
+  margin:0!important; padding:4px!important;
+  display:grid!important; grid-template-columns:1fr 1fr; gap:4px!important;
+  border:1px solid var(--border)!important; border-radius:999px!important;
+  background:var(--surface-3)!important; clip-path:none!important; box-shadow:none!important;
+}
+html[data-prod-theme] body .shell > .top:not(.side-right) .theme-opt{
+  display:inline-flex!important; align-items:center; justify-content:center; gap:6px!important;
+  height:34px!important; padding:0 10px!important; border:0!important; border-radius:999px!important;
+  background:transparent!important; color:var(--muted)!important; font-size:12.5px!important; clip-path:none!important; box-shadow:none!important;
+}
+html[data-prod-theme] body .shell > .top:not(.side-right) .theme-opt[aria-pressed="true"]{
+  background:var(--surface)!important; color:var(--foreground)!important; font-weight:600!important;
+  box-shadow:0 2px 8px rgba(0,0,0,.12)!important;
+}
+html[data-prod-theme] body .mk-stone{ width:20px!important; height:20px!important; flex:0 0 20px; border-radius:50%; filter:none!important; animation:none!important; }
+html[data-prod-theme] body img.mk-stone-night{ filter:hue-rotate(110deg) saturate(1.4)!important; }
+/* มิกุยืนท้ายเพลย์ลิสต์ */
+html[data-prod-theme] body .shell > .top:not(.side-right) .mk-dock{ order:6; }
+html[data-prod-theme] body .shell > .top:not(.side-right) .theme-switch{ order:7; }
+html[data-prod-theme] body .shell > .top:not(.side-right) .fx-system{ order:8; }
+html[data-prod-theme] body .shell > .top:not(.side-right)::after{
+  order:5; content:""; flex:0 0 210px; margin:auto -14px -6px;
+  background:url("../img/miku-day.png?v=miku7") 50% 100%/auto 118% no-repeat;
+  -webkit-mask:linear-gradient(180deg, transparent, #000 30%); mask:linear-gradient(180deg, transparent, #000 30%);
+  pointer-events:none;
+}
+html:not([data-prod-theme="light"]) body .shell > .top:not(.side-right)::after{ background-image:url("../img/miku-night.png?v=miku7"); }
+@media (max-height:760px){ html[data-prod-theme] body .shell > .top:not(.side-right)::after{ display:none; } }
+
+/* ย่อเพลย์ลิสต์: เหลือแต่ไอคอน */
+html[data-prod-theme] body.collapse-left .shell > .top:not(.side-right){ display:flex!important; padding:16px 10px 0!important; }
+html[data-prod-theme] body.collapse-left .shell > .top:not(.side-right) .brand-copy,
+html[data-prod-theme] body.collapse-left .shell > .top:not(.side-right) .mk-brand-types,
+html[data-prod-theme] body.collapse-left .shell > .top:not(.side-right) .tabs::before,
+html[data-prod-theme] body.collapse-left .shell > .top:not(.side-right) .tab::before,
+html[data-prod-theme] body.collapse-left .shell > .top:not(.side-right) .tab::after,
+html[data-prod-theme] body.collapse-left .shell > .top:not(.side-right) .tab > span:last-child,
+html[data-prod-theme] body.collapse-left .shell > .top:not(.side-right) .side-collapse-text,
+html[data-prod-theme] body.collapse-left .shell > .top:not(.side-right) .theme-opt span,
+html[data-prod-theme] body.collapse-left .shell > .top:not(.side-right)::after{ display:none!important; }
+html[data-prod-theme] body.collapse-left .shell > .top:not(.side-right) h1{ justify-content:center; padding:0 0 10px!important; }
+html[data-prod-theme] body.collapse-left .shell > .top:not(.side-right) .tab{ justify-content:center; padding:0!important; }
+html[data-prod-theme] body.collapse-left .shell > .top:not(.side-right) .theme-switch{ display:flex!important; flex-direction:column; border-radius:20px!important; margin-bottom:14px!important; }
+html[data-prod-theme] body.collapse-left .shell > .top:not(.side-right) .side-collapse{ padding:0!important; width:100%; }
+
+/* ================= ลิ้นชัก MK Plan (ลอยด้านขวา) ================= */
+html[data-prod-theme] body .shell > aside.top.side-right{
+  position:fixed!important; right:16px!important; top:16px!important; bottom:16px!important; left:auto!important;
+  width:290px!important; height:auto!important; z-index:85!important;
+  display:flex; flex-direction:column!important; align-items:stretch!important; gap:12px!important;
+  padding:18px 14px!important; overflow:auto!important; box-sizing:border-box;
+  border:1px solid var(--border)!important; border-radius:26px!important;
+  background:color-mix(in srgb, var(--surface) 94%, transparent)!important; backdrop-filter:blur(16px);
+  box-shadow:0 24px 60px rgba(0,0,0,.25)!important;
+}
+html[data-prod-theme] body.collapse-right .shell > aside.top.side-right{ display:none!important; }
+html[data-prod-theme] body .shell > aside.top.side-right h1{ margin:0!important; padding:0 4px!important; }
+html[data-prod-theme] body .shell > aside.top.side-right .brand-copy b{
+  font:800 18px/1 'M PLUS Rounded 1c',sans-serif!important; letter-spacing:.06em!important;
+  background:linear-gradient(90deg, var(--mk-ribbon-a), var(--mk-ribbon-b))!important; -webkit-background-clip:text!important; background-clip:text!important; -webkit-text-fill-color:transparent!important;
+}
+html[data-prod-theme] body .shell > aside.top.side-right .side-collapse{
+  display:inline-flex!important; align-items:center; gap:6px; height:32px; padding:0 14px!important; align-self:flex-start;
+  border:1px solid var(--border)!important; border-radius:999px!important; background:var(--surface-2)!important; color:var(--muted)!important; clip-path:none!important;
+}
+html[data-prod-theme] body .shell > aside.top.side-right .side-collapse svg{ width:14px; height:14px; stroke:currentColor!important; fill:none; }
+html[data-prod-theme] body .shell > aside.top.side-right .tabs{ display:flex!important; flex-direction:column!important; gap:6px!important; margin:0!important; overflow:visible!important; }
+html[data-prod-theme] body .shell > aside.top.side-right .tabs .tab{
+  display:flex!important; align-items:center; gap:10px; width:100%!important; height:46px!important; padding:0 12px!important;
+  border:1px solid var(--border-soft)!important; border-radius:14px!important; clip-path:none!important;
+  background:var(--surface-2)!important; color:var(--foreground)!important; opacity:1!important;
+}
+html[data-prod-theme] body .shell > aside.top.side-right .tabs .tab *{ color:inherit!important; stroke:var(--accent)!important; opacity:1!important; }
+html[data-prod-theme] body .shell > aside.top.side-right .tabs .tab:hover{ border-color:var(--accent)!important; }
+html[data-prod-theme] body .shell > aside.top.side-right .tabs .tab.active{ background:linear-gradient(120deg, var(--mk-ribbon-b), var(--mk-pink-2))!important; color:#fff!important; border-color:transparent!important; }
+html[data-prod-theme] body .shell > aside.top.side-right .tabs .tab.active *{ color:#fff!important; stroke:#fff!important; }
+/* ปุ่มเปิดลิ้นชัก: แท็บแคปซูลแนวตั้งติดขอบขวา */
+html[data-prod-theme] body.collapse-right .side-peek-right{
+  display:flex!important; position:fixed!important; right:0!important; top:50%!important; transform:translateY(-50%);
+  width:38px!important; height:118px!important; padding:0!important; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+  border:0!important; border-radius:18px 0 0 18px!important; clip-path:none!important;
+  background:linear-gradient(180deg, var(--mk-ribbon-b), var(--mk-pink-2))!important; color:#fff!important;
+  box-shadow:-6px 6px 18px rgba(0,0,0,.2)!important; z-index:70!important; cursor:pointer;
+}
+html[data-prod-theme] body.collapse-right .side-peek-right svg{ stroke:#fff!important; width:18px!important; height:18px!important; }
+html[data-prod-theme] body.collapse-right .side-peek-right::after{ content:"MK PLAN"; writing-mode:vertical-rl; font:800 10px/1 'M PLUS Rounded 1c',sans-serif; letter-spacing:.18em; color:#fff; }
+html[data-prod-theme] body:not(.collapse-right) .side-peek-right{ display:none!important; }
+
+/* ================= การ์ด NOW PLAYING (หัวหน้า) ================= */
+.ms-gone{ display:none!important; }
+.ms-head{
+  position:relative; overflow:hidden; isolation:isolate;
+  display:grid; grid-template-columns:auto minmax(0,1fr); grid-template-areas:"jacket main" "jacket actions"; align-items:center; gap:14px 22px;
+  min-height:150px; padding:22px 230px 22px 22px; margin:0 0 14px;
+  border-radius:28px;
+  background:linear-gradient(115deg, var(--mk-ribbon-a) 0%, var(--mk-teal-2) 62%, var(--mk-ribbon-b) 140%);
+  color:#fff;
+  box-shadow:0 18px 40px color-mix(in srgb, var(--mk-ribbon-a) 28%, transparent);
+}
+html:not([data-prod-theme="light"]) .ms-head{
+  background:linear-gradient(115deg, #0f3a3c 0%, #123a44 55%, #3a1430 120%);
+  border:1px solid color-mix(in srgb, var(--mk-ribbon-a) 45%, transparent);
+  box-shadow:0 0 0 1px rgba(255,255,255,.03), 0 18px 50px rgba(0,0,0,.45), inset 0 0 60px color-mix(in srgb, var(--mk-ribbon-a) 14%, transparent);
+}
+.ms-head::before{ /* วงแหวนแผ่นเสียงจางๆ */
+  content:""; position:absolute; z-index:-1; right:120px; top:50%; width:340px; height:340px; transform:translateY(-50%); border-radius:50%;
+  background:repeating-radial-gradient(circle, rgba(255,255,255,.10) 0 1px, transparent 1px 9px);
+}
+.ms-jacket{
+  position:relative; width:104px; height:104px; border-radius:22px; display:grid; place-items:center;
+  background:linear-gradient(135deg, rgba(255,255,255,.95), rgba(255,255,255,.75)); color:var(--accent-deep);
+  box-shadow:0 12px 26px rgba(0,0,0,.18), inset 0 0 0 3px rgba(255,255,255,.6);
+}
+html:not([data-prod-theme="light"]) .ms-jacket{ background:linear-gradient(135deg, #173f44, #0c2125); color:var(--mk-ribbon-a); box-shadow:0 0 22px color-mix(in srgb, var(--mk-ribbon-a) 30%, transparent), inset 0 0 0 2px color-mix(in srgb, var(--mk-ribbon-a) 50%, transparent); }
+.ms-jacket b{ font-size:40px; line-height:1; }
+.ms-eq{ position:absolute; left:12px; bottom:10px; display:flex; align-items:flex-end; gap:3px; height:16px; }
+.ms-eq i{ width:4px; height:100%; border-radius:2px; background:var(--mk-ribbon-b); transform-origin:bottom; animation:msBar .8s ease-in-out infinite alternate; }
+.ms-eq i:nth-child(2){ animation-delay:-.25s; background:var(--mk-ribbon-a); } .ms-eq i:nth-child(3){ animation-delay:-.5s; } .ms-eq i:nth-child(4){ animation-delay:-.1s; background:var(--mk-ribbon-a); }
+@keyframes msBar{ from{ transform:scaleY(.25); } to{ transform:scaleY(1); } }
+.ms-jacket{ grid-area:jacket; align-self:start; }
+.ms-head-main{ grid-area:main; min-width:0; }
+.ms-track{ display:flex; flex-wrap:wrap; align-items:center; gap:10px; font:800 11px/1 'M PLUS Rounded 1c',sans-serif; letter-spacing:.16em; opacity:.95; }
+.ms-live{ padding:4px 9px; border-radius:999px; background:rgba(255,255,255,.95); color:var(--mk-ribbon-b); letter-spacing:.08em; }
+html:not([data-prod-theme="light"]) .ms-live{ background:var(--mk-ribbon-b); color:#fff; box-shadow:0 0 12px var(--mk-ribbon-b); }
+.ms-title{ margin:10px 0 6px!important; font-size:clamp(24px, 2.6vw, 34px)!important; font-weight:800!important; line-height:1.15!important; color:#fff!important; text-shadow:0 2px 12px rgba(0,0,0,.15); }
+.ms-sub{ margin:0!important; max-width:780px; font-size:13.5px!important; line-height:1.6; color:rgba(255,255,255,.92)!important; }
+.ms-sub *{ color:inherit!important; }
+.ms-wave{ display:flex; align-items:center; gap:3px; height:26px; margin-top:12px; max-width:560px; }
+.ms-wave i{ flex:1; height:var(--h); border-radius:2px; background:rgba(255,255,255,.55); }
+.ms-wave i:nth-child(-n+18){ background:#fff; }
+html.mk-fx-on .ms-wave i{ animation:msWave 1.6s ease-in-out infinite alternate; }
+html.mk-fx-on .ms-wave i:nth-child(3n){ animation-delay:-.5s; } html.mk-fx-on .ms-wave i:nth-child(3n+1){ animation-delay:-1s; }
+@keyframes msWave{ to{ transform:scaleY(.45); } }
+.ms-head-actions{ grid-area:actions; display:flex; flex-wrap:wrap; align-items:center; gap:10px 16px; min-width:0; }
+.ms-head-actions > .sun-imp-bar{ flex:1 1 420px; max-width:620px; }
+.ms-head-actions > *{ margin:0!important; }
+.ms-head-actions .sun-imp-bar{ background:rgba(255,255,255,.95)!important; color:var(--foreground)!important; border:0!important; border-radius:18px!important; box-shadow:0 10px 24px rgba(0,0,0,.14)!important; padding:12px 14px!important; }
+html:not([data-prod-theme="light"]) .ms-head-actions .sun-imp-bar{ background:rgba(8,20,24,.85)!important; color:var(--foreground)!important; }
+.ms-head-actions label{ color:#fff!important; font-size:12.5px!important; }
+.ms-head-miku{ /* มิกุทั้งตัวอยู่ในกรอบการ์ด ไม่ล้น/ไม่บังตัวหนังสือ */
+  position:absolute; z-index:-1; right:8px; bottom:0; height:100%; max-height:300px; width:auto; pointer-events:none; user-select:none;
+  filter:drop-shadow(0 8px 16px rgba(0,0,0,.22));
+}
+html.mk-fx-on .ms-head-miku{ animation:msMikuBob 4s ease-in-out infinite; }
+@keyframes msMikuBob{ 50%{ transform:translateY(-6px) rotate(-1deg); } }
+@media (max-width:1100px){ .ms-head{ padding-right:170px; } .ms-head-miku{ right:-20px; } }
+@media (max-width:640px){ .ms-head{ grid-template-columns:1fr; grid-template-areas:"main" "actions"; padding:18px; } .ms-jacket{ display:none; } .ms-head-miku{ opacity:.25; } }
+
+/* ชิปตัวเลขสรุปใต้การ์ด NOW PLAYING */
+.ms-hud{ display:flex; flex-wrap:wrap; gap:12px; margin:0 0 18px; }
+.ms-hud.is-empty{ display:none; }
+.ms-hud > *{ flex:1 1 320px; margin:0!important; }
+.ms-hud .beta-stats, .ms-hud .summary-stats, .ms-hud .before-order-stats{ display:flex!important; flex-wrap:wrap; gap:10px!important; }
+.ms-hud .beta-stat, .ms-hud .summary-stats > *, .ms-hud .before-order-stats > *{ flex:1 1 140px; }
+
+/* ================= SETLIST / ON STAGE ================= */
+.ms-body{ display:flex; flex-direction:column; gap:12px; }
+.ms-label{ display:flex; align-items:baseline; gap:10px; margin:8px 2px 0; }
+.ms-label span{ font-size:13px; font-weight:800; letter-spacing:.24em; color:var(--mk-ribbon-b); }
+html:not([data-prod-theme="light"]) .ms-label span{ color:var(--mk-ribbon-a); text-shadow:0 0 10px color-mix(in srgb, var(--mk-ribbon-a) 50%, transparent); }
+.ms-label small{ font-size:13px; color:var(--muted); }
+.ms-label::after{ content:""; flex:1; height:2px; align-self:center; border-radius:2px; background:linear-gradient(90deg, var(--border), transparent); }
+.ms-setlist{ display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px; align-items:start; }
+.ms-stage{ display:flex; flex-direction:column; gap:16px; min-width:0; }
+
+/* การ์ด */
+.ms-card{
+  position:relative; min-width:0; overflow:hidden;
+  border:1px solid var(--border); border-radius:22px;
+  background:linear-gradient(90deg, var(--mk-ribbon-a), var(--mk-ribbon-b)) top/100% 4px no-repeat, var(--surface);
+  box-shadow:0 10px 30px rgba(10,60,57,.07);
+}
+html:not([data-prod-theme="light"]) .ms-card{ background:linear-gradient(90deg, var(--mk-ribbon-a), var(--mk-ribbon-b)) top/100% 3px no-repeat, linear-gradient(160deg, var(--surface-2), var(--surface)); box-shadow:0 14px 34px rgba(0,0,0,.3); }
+.ms-card.is-off{ display:none!important; }
+.ms-card-bare{ background:transparent!important; border:0!important; box-shadow:none!important; overflow:visible; }
+.ms-card-head{ display:flex; align-items:center; gap:10px; padding:14px 18px 8px; font-weight:600; font-size:15px; color:var(--foreground); }
+.ms-num{
+  position:relative; flex:0 0 30px; width:30px; height:30px; display:grid; place-items:center;
+  border-radius:50% 50% 50% 8px; transform:rotate(-8deg);
+  background:linear-gradient(135deg, var(--mk-ribbon-a), var(--mk-ribbon-b)); color:#fff; font-size:14px; font-weight:800;
+  box-shadow:0 4px 10px color-mix(in srgb, var(--mk-ribbon-b) 30%, transparent);
+}
+.ms-ico{ flex:0 0 30px; width:30px; height:30px; display:grid; place-items:center; border-radius:10px; background:var(--accent-soft); font-size:15px; }
+.ms-card-body{ padding:6px 18px 18px; min-width:0; }
+.ms-card-bare > .ms-card-body{ padding:0; }
+/* การ์ดเดิมที่ถูกย้ายเข้ามา: ไม่ให้มีกรอบซ้อนกรอบ */
+.ms-card-body > .card, .ms-card-body > .panel, .ms-card-body > .saved-files, .ms-card-body > .download-box,
+.ms-card-body > .compare-preview-section, .ms-card-body > .order-filter-card, .ms-card-body > .beta-drop{
+  border:0!important; box-shadow:none!important; background:transparent!important; padding:0!important; margin:0!important;
+}
+
+/* การ์ด "ยังไม่มีเพลงบนเวที" */
+.ms-empty{ display:flex; align-items:center; gap:22px; min-height:200px; padding:22px 28px; }
+.ms-empty-art{ flex:0 0 130px; height:170px; display:grid; place-items:end center; overflow:hidden; border-radius:18px; background:radial-gradient(circle at 50% 80%, var(--accent-soft), transparent 70%); }
+.ms-empty-art img{ height:150%; width:auto; transform:translateY(22%); opacity:.9; }
+.ms-empty b{ display:block; font:800 20px/1.3 'M PLUS Rounded 1c',sans-serif; color:var(--foreground); }
+.ms-empty span{ display:block; margin-top:6px; color:var(--muted); font-size:14px; }
+
+/* ================= ส่วนประกอบทั่วไป ================= */
+html[data-prod-theme] body .beta-card, html[data-prod-theme] body .sun-imp-card, html[data-prod-theme] body .sun-card, html[data-prod-theme] body .saved-files, html[data-prod-theme] body .order-filter-card,
+html[data-prod-theme] body .order-filter-wrap, html[data-prod-theme] body .card, html[data-prod-theme] body .download-box, html[data-prod-theme] body .compare-preview-section,
+html[data-prod-theme] body .summary-card, html[data-prod-theme] body .scan-card, html[data-prod-theme] body .before-order-card{
+  border:1px solid var(--border)!important; border-radius:20px!important;
+  background:var(--surface)!important; box-shadow:0 8px 24px rgba(10,60,57,.06)!important; clip-path:none!important;
+}
+html[data-prod-theme] body .beta-stat, html[data-prod-theme] body .summary-stats > *, html[data-prod-theme] body .before-order-stats > *, html[data-prod-theme] body .scan-stats > *, html[data-prod-theme] body .stats > *{
+  border:1px solid var(--border)!important; border-radius:18px!important; clip-path:none!important;
+  background:linear-gradient(160deg, var(--surface), var(--surface-2))!important;
+  box-shadow:0 6px 18px rgba(10,60,57,.06)!important;
+}
+html[data-prod-theme] body .sv, html[data-prod-theme] body .beta-stat .sv, html[data-prod-theme] body .sun-imp-card .sv{
+  font-family:'M PLUS Rounded 1c','Mitr',sans-serif!important; font-weight:800!important; color:var(--accent)!important;
+}
+html[data-prod-theme] body .beta-drop, html[data-prod-theme] body .sun-imp-drop, html[data-prod-theme] body .upload-area, html[data-prod-theme] body .drop, html[data-prod-theme] body #orderDrop, html[data-prod-theme] body #scanDrop{
+  border:2px dashed color-mix(in srgb, var(--accent) 45%, var(--border))!important; border-radius:18px!important;
+  background:var(--surface-2)!important;
+}
+html[data-prod-theme] body .beta-drop:hover, html[data-prod-theme] body .sun-imp-drop:hover, html[data-prod-theme] body .drop:hover{ border-color:var(--mk-ribbon-b)!important; background:color-mix(in srgb, var(--mk-ribbon-b) 5%, var(--surface-2))!important; }
+
+/* การ์ดอัปโหลดหน้านำเข้า: มุมโค้ง + แถบสีบน */
+html[data-prod-theme] body #sunImportGrid .sun-imp-card{ background:linear-gradient(90deg, var(--mk-ribbon-a), var(--mk-ribbon-b)) top/100% 4px no-repeat, var(--surface)!important; }
+
+/* ปุ่ม */
+html[data-prod-theme] body button{ border-radius:999px!important; clip-path:none!important; }
+html[data-prod-theme] body .beta-primary, html[data-prod-theme] body .sun-primary, html[data-prod-theme] body .green, html[data-prod-theme] body .excel-pivot-export-btn, html[data-prod-theme] body .pdf-print-btn,
+html[data-prod-theme] body .compare-web-download, html[data-prod-theme] body #orderTool .order-pivot-copy-btn, html[data-prod-theme] body .saved-file-open, html[data-prod-theme] body #orderAutoBtn{
+  background:linear-gradient(120deg, var(--mk-ribbon-a), var(--mk-teal-2))!important;
+  color:#fff!important; border:0!important; font-weight:600!important; letter-spacing:.01em!important;
+  padding-left:22px!important; padding-right:22px!important;
+  box-shadow:0 8px 18px color-mix(in srgb, var(--mk-ribbon-a) 30%, transparent)!important;
+  transition:transform .15s, box-shadow .15s, filter .15s;
+}
+html[data-prod-theme] body .beta-primary:hover:not(:disabled), html[data-prod-theme] body .sun-primary:hover:not(:disabled), html[data-prod-theme] body .green:hover, html[data-prod-theme] body .saved-file-open:hover, html[data-prod-theme] body #orderAutoBtn:hover:not(:disabled){
+  transform:translateY(-2px); box-shadow:0 12px 24px color-mix(in srgb, var(--mk-ribbon-b) 28%, transparent)!important;
+}
+html[data-prod-theme] body .beta-primary:disabled, html[data-prod-theme] body .sun-primary:disabled, html[data-prod-theme] body #orderAutoBtn:disabled{ filter:grayscale(.7) opacity(.6); box-shadow:none!important; cursor:not-allowed; }
+html[data-prod-theme] body .secondary, html[data-prod-theme] body .btn-secondary, html[data-prod-theme] body .saved-file-del, html[data-prod-theme] body .saved-file-alt, html[data-prod-theme] body .saved-files-clear, html[data-prod-theme] body .beta-danger{
+  background:var(--surface)!important; border:1.5px solid var(--border)!important; color:var(--foreground)!important; box-shadow:none!important;
+}
+html[data-prod-theme] body .secondary:hover, html[data-prod-theme] body .btn-secondary:hover, html[data-prod-theme] body .saved-file-alt:hover{ border-color:var(--mk-ribbon-b)!important; color:var(--mk-ribbon-b)!important; }
+
+/* ช่องกรอก */
+html[data-prod-theme] body input[type="text"], html[data-prod-theme] body input[type="number"], html[data-prod-theme] body input[type="search"], html[data-prod-theme] body input[type="password"],
+html[data-prod-theme] body input[type="time"], html[data-prod-theme] body input[type="date"], html[data-prod-theme] body select, html[data-prod-theme] body textarea{
+  border:1.5px solid var(--border)!important; border-radius:14px!important;
+  background:var(--surface)!important; color:var(--foreground)!important; box-shadow:none!important;
+}
+html[data-prod-theme] body input:focus, html[data-prod-theme] body select:focus, html[data-prod-theme] body textarea:focus{
+  outline:none!important; border-color:var(--accent)!important; box-shadow:0 0 0 4px var(--accent-soft)!important;
+}
+html[data-prod-theme] body input[type="checkbox"], html[data-prod-theme] body input[type="radio"]{ accent-color:var(--mk-ribbon-b); }
+
+/* ตาราง */
+html[data-prod-theme] body table{ border-collapse:separate!important; border-spacing:0; }
+html[data-prod-theme] body th{
+  background:var(--surface-3)!important; color:var(--foreground)!important;
+  font-size:12.5px!important; font-weight:700!important; letter-spacing:.02em!important; text-transform:none!important;
+  border-bottom:2px solid color-mix(in srgb, var(--accent) 45%, var(--border))!important;
+}
+html[data-prod-theme] body thead tr:first-child th:first-child{ border-top-left-radius:14px; }
+html[data-prod-theme] body thead tr:first-child th:last-child{ border-top-right-radius:14px; }
+html[data-prod-theme] body td{ border-bottom:1px solid var(--border-soft)!important; }
+html[data-prod-theme] body tbody tr:nth-child(even) td{ background:color-mix(in srgb, var(--accent) 3%, transparent); }
+html[data-prod-theme] body tbody tr:hover td{ background:color-mix(in srgb, var(--mk-ribbon-b) 7%, transparent)!important; }
+
+/* แถบความคืบหน้า */
+html[data-prod-theme] body .progress, html[data-prod-theme] body .beta-progress{ border-radius:999px!important; background:var(--surface-3)!important; overflow:hidden; }
+html[data-prod-theme] body .progress > div, html[data-prod-theme] body .beta-progress > div, html[data-prod-theme] body .bar{
+  border-radius:999px!important;
+  background:repeating-linear-gradient(90deg, rgba(255,255,255,.25) 0 6px, transparent 6px 12px), linear-gradient(90deg, var(--mk-ribbon-a), var(--mk-ribbon-b))!important;
+}
+
+/* แถบเลื่อน */
+*{ scrollbar-width:thin; scrollbar-color:color-mix(in srgb, var(--accent) 55%, transparent) transparent; }
+*::-webkit-scrollbar{ width:10px; height:10px; }
+*::-webkit-scrollbar-thumb{ background:color-mix(in srgb, var(--accent) 55%, transparent); border-radius:999px; border:2px solid transparent; background-clip:padding-box; }
+*::-webkit-scrollbar-track{ background:transparent; }
+
+/* ================= จอแคบ ================= */
+@media (max-width:900px){
+  html[data-prod-theme] body .shell{ display:block!important; }
+  html[data-prod-theme] body .shell > .top:not(.side-right){ position:relative!important; height:auto!important; padding:12px!important; }
+  html[data-prod-theme] body .shell > .top:not(.side-right)::after{ display:none; }
+  html[data-prod-theme] body .shell > .top:not(.side-right) .tabs{ flex-direction:row!important; flex-wrap:wrap; }
+  html[data-prod-theme] body .shell > .top:not(.side-right) .tab{ width:auto!important; flex:1 1 140px; }
+  html[data-prod-theme] body .panel-wrap{ padding:16px 14px 80px!important; }
+}
+
+/* เมนู ✦ ที่ย้ายมาอยู่ท้ายเพลย์ลิสต์: เปิดเป็นป๊อปอัปลอยขึ้นด้านบน (ไม่โดนตัดขอบแถบ) */
+html[data-prod-theme] body .shell > .top:not(.side-right) .mk-dock{ display:flex; }
+html[data-prod-theme] body .shell > .top:not(.side-right) .mk-dock-btn{ flex:1; height:38px!important; border:1px solid var(--border)!important; background:var(--surface)!important; color:var(--accent)!important; }
+html[data-prod-theme] body .shell > .top:not(.side-right) .mk-dock-panel{
+  position:fixed!important; left:278px; right:auto; top:auto; bottom:18px; max-height:calc(100vh - 36px); overflow:auto;
+  border:1px solid var(--border)!important; border-radius:20px!important; background:var(--surface)!important;
+  box-shadow:0 24px 60px rgba(0,0,0,.28)!important;
+}
+html[data-prod-theme] body.collapse-left .shell > .top:not(.side-right) .mk-dock-panel{ left:98px; }
+html[data-prod-theme] body .mk-dock-panel > button{ border-radius:12px!important; }
+
+/* การ์ดอัปโหลดหน้านำเข้า: จัดให้พอดีความกว้าง */
+html[data-prod-theme] body #sunImportGrid{ display:grid!important; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr))!important; gap:14px!important; }
+/* โหมด 3D: การ์ดเป็นกระจกฝ้า มองเห็นฮอลล์ข้างหลัง */
+html.mk-fx-on.mk-3d-on body .ms-card:not(.ms-card-bare){ background:linear-gradient(90deg, var(--mk-ribbon-a), var(--mk-ribbon-b)) top/100% 4px no-repeat, color-mix(in srgb, var(--surface) 82%, transparent); backdrop-filter:blur(8px); }
+
+/* ป้ายหัวการ์ดเดิมของระบบ (เช่น "03 / ORDER INTAKE") ซ้ำกับการ์ด NOW PLAYING แล้ว: ซ่อน */
+html[data-prod-theme] body .ms-page .beta-card::before, html[data-prod-theme] body .ms-page .scan-card::before,
+html[data-prod-theme] body .ms-page .summary-card::before, html[data-prod-theme] body .ms-page .before-order-card::before{ content:none!important; display:none!important; }
+
+/* บล็อกเดิมที่ย้าย/ซ่อนแล้ว: ซ่อนจริง (ชนะกฎเดิมที่ผูกกับ id ของหน้า) */
+html[data-prod-theme] body :is(#mergeTool,#compareTool,#orderTool,#beforeOrderTool,#scanTool,#summaryTool,#sunTool) .ms-gone{ display:none!important; }
+
+/* กล่องข้อความ/การ์ดป๊อปอัปทั้งแอป: การ์ดขาวโค้งมน (ไม่ใช่กรอบเกมสองชั้น) */
+html[data-prod-theme]{ --mk-dlg-bg:var(--surface); --mk-dlg-fg:var(--foreground); --mk-dlg-line:var(--border); }
+html[data-prod-theme] body .mk-dlg{ border-radius:22px!important; padding-left:58px!important; box-shadow:0 14px 34px rgba(0,0,0,.16)!important;
+  background:linear-gradient(90deg, var(--mk-ribbon-a), var(--mk-ribbon-b)) left/5px 100% no-repeat, var(--surface)!important; }
+html[data-prod-theme] body .mk-dlg.is-ok{ background:linear-gradient(var(--mk-ribbon-a), var(--mk-ribbon-a)) left/5px 100% no-repeat, var(--surface)!important; }
+/* ปุ่มบนการ์ด NOW PLAYING: ปุ่มขาวบนพื้นมิ้นต์ */
+html[data-prod-theme="light"] body .ms-head-actions button:not(:disabled), html[data-prod-theme="light"] body .ms-head-actions select{
+  background:#fff!important; color:var(--accent-deep)!important; border:0!important; box-shadow:0 6px 16px rgba(0,0,0,.12)!important;
+}
+html[data-prod-theme="light"] body .ms-head-actions input, html[data-prod-theme="light"] body .ms-head-actions .sun-toolbar{ background:rgba(255,255,255,.95)!important; color:var(--foreground)!important; border-color:transparent!important; }
+html[data-prod-theme="light"] body .ms-head-actions .sun-toolbar{ border-radius:18px!important; padding:6px 8px!important; box-shadow:0 8px 20px rgba(0,0,0,.12)!important; }
+
+/* ================= MIKU RADIO (js/mk-world.js) — การ์ดเครื่องเล่นลอยมุมซ้ายล่าง ================= */
+.mk-radio{
+  position:fixed; left:280px; bottom:16px; z-index:2147482970; width:260px; display:none;
+  padding:12px; box-sizing:border-box; border-radius:24px;
+  background:linear-gradient(90deg, var(--mk-ribbon-a), var(--mk-ribbon-b)) top/100% 4px no-repeat, var(--surface);
+  border:1px solid var(--border); box-shadow:0 22px 50px rgba(0,0,0,.28); color:var(--foreground);
+  font-family:'Mitr',sans-serif;
+}
+.mk-radio.is-open{ display:block; animation:mkPopIn .35s cubic-bezier(.3,1.5,.5,1); }
+html[data-prod-theme] body.collapse-left .mk-radio{ left:100px; }
+@media (max-width:900px){ .mk-radio{ left:16px!important; } }
+.mk-radio-head{ display:flex; align-items:center; justify-content:space-between; margin:0 2px 8px; }
+.mk-radio-head b{ font:800 13px/1 'M PLUS Rounded 1c',sans-serif; letter-spacing:.14em; color:var(--mk-ribbon-b); }
+html[data-prod-theme] body .mk-radio-x{ width:26px!important; height:26px!important; min-height:0!important; padding:0!important; border:0!important; background:var(--surface-3)!important; color:var(--muted)!important; font-size:16px!important; line-height:1!important; }
+/* จอเครื่องเล่น: ขนาดอย่างน้อย 200×200 ตามข้อกำหนดของ YouTube (ไม่ซ่อนเครื่องเล่นขณะเล่น) */
+.mk-radio-screen{ position:relative; width:100%; height:200px; border-radius:16px; overflow:hidden; background:#0b1418; }
+.mk-radio-screen > div, .mk-radio-screen iframe{ position:absolute; inset:0; width:100%!important; height:100%!important; border:0; }
+html[data-prod-theme] body .mk-radio-cover{
+  position:absolute; inset:0; z-index:2; display:flex!important; flex-direction:column; align-items:center; justify-content:center; gap:12px;
+  width:100%!important; height:100%!important; padding:0!important; border:0!important; border-radius:0!important; cursor:pointer;
+  background:radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--mk-ribbon-a) 45%, #0b1418), #0b1418 75%)!important; color:#fff!important; box-shadow:none!important;
+}
+.mk-radio-cover img{ width:150px; height:auto; filter:drop-shadow(0 6px 14px rgba(0,0,0,.5)); }
+.mk-radio-cover span{ font-size:13px; padding:6px 14px; border-radius:999px; background:var(--mk-ribbon-b); }
+.mk-radio.has-player .mk-radio-cover{ display:none!important; }
+.mk-radio-now{ margin:10px 4px 6px; min-height:36px; }
+.mk-radio-now b{ display:block; font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.mk-radio-now small{ display:block; font-size:11.5px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.mk-radio-ctl{ display:flex; align-items:center; justify-content:space-between; gap:6px; }
+html[data-prod-theme] body .mk-radio-ctl button{
+  width:38px!important; height:38px!important; min-height:0!important; padding:0!important; border:1px solid var(--border)!important;
+  background:var(--surface-2)!important; color:var(--foreground)!important; font-size:15px!important; box-shadow:none!important;
+}
+html[data-prod-theme] body .mk-radio-ctl .mk-radio-play{ width:52px!important; height:52px!important; border:0!important; font-size:20px!important; color:#fff!important;
+  background:linear-gradient(135deg, var(--mk-ribbon-a), var(--mk-ribbon-b))!important; box-shadow:0 8px 18px color-mix(in srgb, var(--mk-ribbon-b) 35%, transparent)!important; }
+html[data-prod-theme] body .mk-radio-ctl .is-on{ border-color:var(--mk-ribbon-b)!important; background:color-mix(in srgb, var(--mk-ribbon-b) 14%, var(--surface))!important; }
+.mk-radio-list{ display:none; list-style:none; margin:10px 0 0; padding:0; max-height:220px; overflow:auto; }
+.mk-radio.show-list .mk-radio-list{ display:block; }
+html[data-prod-theme] body .mk-radio-list button{
+  display:block!important; width:100%!important; height:auto!important; min-height:0!important; margin:0 0 4px!important; padding:7px 12px!important; text-align:left;
+  border:0!important; border-radius:12px!important; background:transparent!important; color:var(--foreground)!important; box-shadow:none!important;
+}
+html[data-prod-theme] body .mk-radio-list button:hover{ background:var(--accent-soft)!important; }
+html[data-prod-theme] body .mk-radio-list button.is-on{ background:linear-gradient(120deg, var(--mk-ribbon-a), var(--mk-teal-2))!important; color:#fff!important; }
+.mk-radio-list b{ display:block; font-size:13px; font-weight:500; }
+.mk-radio-list small{ display:block; font-size:11px; opacity:.75; }
+.mk-radio-note{ margin:8px 2px 0; font-size:10.5px; line-height:1.4; color:var(--muted-2); }
+/* ไอคอนเพลงในปุ่ม ✦ ขยับตอนกำลังเล่น */
+.mk-radio.is-playing .mk-radio-head b::after{ content:" ●"; color:var(--mk-ribbon-b); animation:mkMtBlink 1s steps(2) infinite; }
+
+/* เพลย์ลิสต์: ห้ามส่วนต่างๆ ถูกบีบจนซ้อนกันตอนจอเตี้ย (ให้เลื่อนในแถบแทน) */
+html[data-prod-theme] body .shell > .top:not(.side-right) > *{ flex-shrink:0; }
+html[data-prod-theme] body .shell > .top:not(.side-right) h1{ height:auto!important; }

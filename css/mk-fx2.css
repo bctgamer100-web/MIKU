@@ -1,0 +1,104 @@
+/* MIKU FX 2 — คู่กับ js/mk-fx2.js (มิกุลอยผ่าน · ตัวเลข HUD · ชาร์จพลัง · MIKU MIKU BEAM)
+   สีทั้งหมดมาจากตัวแปร --mk-* ใน miku.css · ทำงานเมื่อ html มีคลาส mk-fx-on */
+
+/* มิกุ: อยู่บนสุดแต่กดทะลุได้ */
+#mkSinger{ position:fixed; inset:0; z-index:2147483001; pointer-events:none; }
+
+@media (prefers-reduced-motion:no-preference){
+
+  /* การ์ดสถิติ: โน้ตเล็กๆ มุมขวาบน ขยับตามจังหวะ */
+  html.mk-fx-on body .beta-stat, html.mk-fx-on body .stat, html.mk-fx-on body .quick-status-item{ position:relative; }
+  html.mk-fx-on body .beta-stat::before{
+    content:"♪"; position:absolute; right:12px; top:8px; pointer-events:none; font-size:14px; color:var(--mk-ribbon-b); opacity:.45;
+    animation:mkBob 1.6s ease-in-out infinite;
+  }
+  html.mk-fx-on body .beta-stat:nth-child(2n)::before{ content:"♫"; color:var(--mk-ribbon-a); animation-delay:-.8s; }
+  @keyframes mkBob{ 50%{ transform:translateY(-4px) rotate(-10deg); } }
+
+  /* ตัวเลขดิจิทัล: ตัวกว้างเท่ากัน ไม่สั่น + เรืองตอนเปลี่ยนค่า */
+  html.mk-fx-on body .sv,
+  html.mk-fx-on body .quick-status-item b{ font-variant-numeric:tabular-nums; }
+  html.mk-fx-on body .mk-hud-hit{
+    animation:mkHudHit .75s ease-out;
+  }
+  @keyframes mkHudHit{
+    0%  { transform:scale(1); color:var(--mk-ribbon-b); }
+    25% { transform:scale(1.18) rotate(-2deg); color:var(--mk-ribbon-b); }
+    60% { transform:scale(.97); }
+    100%{ transform:scale(1); }
+  }
+  html.mk-fx-on body .sv.mk-hud-hit{ display:block; transform-origin:left center; }
+
+  /* ---------- แถบ progress → แถบเพลงไล่สีมิ้นต์-ชมพู มีจุดโน้ตวิ่ง ---------- */
+  html.mk-fx-on body #progress .bar,
+  html.mk-fx-on body .sun-imp-progress i{
+    position:relative;
+    background:
+      radial-gradient(circle at 7px 50%, rgba(255,255,255,.55) 2.5px, transparent 3px),
+      linear-gradient(90deg, var(--mk-ribbon-a), var(--mk-ribbon-b))!important;
+    background-size:28px 100%, 100% 100%!important;
+    animation:mkStripe .6s linear infinite;
+    box-shadow:0 0 10px color-mix(in srgb, var(--mk-ribbon-a) 70%, transparent);
+  }
+  @keyframes mkStripe{ to{ background-position:28px 0, 0 0 } }
+
+  /* ---------- แผงชาร์จพลัง (ลอยใต้แถบนำทาง) ---------- */
+  .mk-charge{
+    position:fixed; left:calc(50% + 132px); top:auto; bottom:96px; z-index:2147482990; width:min(420px, calc(100vw - 32px));
+    padding:10px 16px 12px; pointer-events:none;
+    background:var(--surface);
+    border:1px solid var(--border);
+    box-shadow:0 16px 40px rgba(0,0,0,.18);
+    border-radius:999px;
+    transform:translate(-50%, -16px) scaleX(.6); opacity:0;
+    transition:transform .3s cubic-bezier(.2,.9,.2,1), opacity .25s;
+    display:none;
+  }
+  html.mk-fx-on .mk-charge.is-on{ display:block; animation:mkChargeIn .3s cubic-bezier(.2,.9,.2,1) forwards; }
+  html.mk-fx-on .mk-charge.is-out{ animation:mkChargeOut .4s ease-in forwards; }
+  @keyframes mkChargeIn{ from{ transform:translate(-50%,-16px) scaleX(.6); opacity:0 } to{ transform:translate(-50%,0) scaleX(1); opacity:1 } }
+  @keyframes mkChargeOut{ from{ transform:translate(-50%,0); opacity:1 } to{ transform:translate(-50%,-12px) scaleY(.4); opacity:0 } }
+
+  .mk-charge-top{
+    display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;
+    font:700 12px/1 'M PLUS Rounded 1c',sans-serif; letter-spacing:.14em; color:var(--mk-ribbon-b);
+    
+  }
+  .mk-charge-pct{ font-variant-numeric:tabular-nums; letter-spacing:.08em; color:var(--foreground); }
+  .mk-charge-track{
+    position:relative; height:10px; overflow:hidden;
+    background:var(--surface-3);
+    border:0;
+    border-radius:999px;
+  }
+  .mk-charge-fill{
+    position:absolute; left:0; top:0; bottom:0; width:0;
+    background:
+      radial-gradient(circle at 7px 50%, rgba(255,255,255,.6) 2.5px, transparent 3px),
+      linear-gradient(90deg, var(--mk-ribbon-a), var(--mk-ribbon-b));
+    background-size:28px 100%, 100% 100%;
+    animation:mkStripe .5s linear infinite;
+    transition:width .35s ease-out;
+    box-shadow:0 0 12px var(--mk-ribbon-a);
+  }
+  /* หัวพลังเป็นประกายที่ปลายหลอด */
+  .mk-charge-fill::after{
+    content:""; position:absolute; right:-3px; top:-4px; bottom:-4px; width:6px;
+    background:#fff; border-radius:3px;
+    box-shadow:0 0 10px #fff, 0 0 18px var(--mk-ribbon-a), 0 0 28px var(--mk-ribbon-b);
+    animation:mkSparkTip .18s steps(2) infinite;
+  }
+  @keyframes mkSparkTip{ 50%{ opacity:.55; transform:scaleY(1.4) } }
+  .mk-charge.is-done{ border-color:var(--mk-ribbon-a); }
+  .mk-charge.is-done .mk-charge-fill{ animation:mkFull .6s ease-out; }
+  .mk-charge.is-done .mk-charge-fill::after{ display:none; }
+  @keyframes mkFull{ 0%{ filter:brightness(1) } 30%{ filter:brightness(2.2) } 100%{ filter:brightness(1) } }
+
+  /* ---------- MIKU MIKU BEAM: ทั้งจอเด้งตามบีต ---------- */
+  body.mk-quake .shell{ animation:mkDrop .8s cubic-bezier(.3,1.6,.5,1); }
+  @keyframes mkDrop{ 0%{ transform:scale(1) } 25%{ transform:scale(.985) } 55%{ transform:scale(1.008) } 100%{ transform:scale(1) } }
+}
+
+@media (prefers-reduced-motion:reduce){
+  #mkSinger, .mk-charge{ display:none!important; }
+}

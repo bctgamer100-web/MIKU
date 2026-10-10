@@ -1,0 +1,57 @@
+/* MIKU 3D — คู่กับ js/mk-3d.js (ฮอลล์คอนเสิร์ต 3D + การ์ดเอียง) ทำงานเมื่อ html มีทั้ง mk-fx-on และ mk-3d-on */
+
+/* ฉากฮอลล์คอนเสิร์ต: อยู่หลังเนื้อหา (.shell z-index:1) ทับพื้นหลังเดิมแบบโปร่งแสง เรนเดอร์ความละเอียดต่ำแล้วขยายให้นุ่ม */
+#mk3d{ position:fixed; inset:0; width:100vw; height:100vh; z-index:0; pointer-events:none; }
+html:not(.mk-fx-on) #mk3d, html:not(.mk-3d-on) #mk3d{ display:none!important; }
+
+.mk-3d-toggle{ margin-left:-10px; }
+
+@media (prefers-reduced-motion:no-preference){
+
+  /* การ์ดเอียงตามเมาส์ */
+  html.mk-fx-on.mk-3d-on body .mk-tilt{
+    position:relative;
+    transform:perspective(700px) rotateX(var(--mk-rx,0deg)) rotateY(var(--mk-ry,0deg)) translateY(-3px)!important;
+    transition:transform .12s ease-out, box-shadow .25s!important;
+    will-change:transform;
+  }
+  html.mk-fx-on.mk-3d-on body .beta-stat,
+  html.mk-fx-on.mk-3d-on body .sun-imp-card,
+  html.mk-fx-on.mk-3d-on body .quick-status-item,
+  html.mk-fx-on.mk-3d-on body .stat{
+    transition:transform .45s cubic-bezier(.2,.8,.2,1), box-shadow .25s;
+  }
+
+  /* แสงสะท้อนบนการ์ด เลื่อนตามเมาส์ */
+  .mk-glare{
+    position:absolute; inset:0; pointer-events:none; z-index:2; opacity:0;
+    background:radial-gradient(circle at var(--mk-gx,50%) var(--mk-gy,50%), color-mix(in srgb, var(--mk-ribbon-a) 26%, transparent), transparent 58%);
+    mix-blend-mode:screen; transition:opacity .25s;
+  }
+  html.mk-fx-on.mk-3d-on body .mk-tilt > .mk-glare{ opacity:1; }
+  html[data-prod-theme="light"] .mk-glare{
+    background:radial-gradient(circle at var(--mk-gx,50%) var(--mk-gy,50%), rgba(224,251,249,.45), transparent 58%);
+  }
+}
+html:not(.mk-3d-on) .mk-glare, html:not(.mk-fx-on) .mk-glare{ display:none; }
+
+/* ---------- โหมด 3D: พื้นหลังหน้าโปร่ง + การ์ดเป็นกระจกฝ้า มองเห็นท้องฟ้า 3D ข้างหลัง ---------- */
+html.mk-fx-on.mk-3d-on body .panel-wrap{ background:transparent!important; }
+html.mk-fx-on.mk-3d-on body .beta-card,
+html.mk-fx-on.mk-3d-on body .sun-imp-card,
+html.mk-fx-on.mk-3d-on body .sun-imp-bar,
+html.mk-fx-on.mk-3d-on body .sun-card,
+html.mk-fx-on.mk-3d-on body .saved-files,
+html.mk-fx-on.mk-3d-on body .order-filter-card,
+html.mk-fx-on.mk-3d-on body .order-filter-wrap,
+html.mk-fx-on.mk-3d-on body .beta-stat,
+html.mk-fx-on.mk-3d-on body .card,
+html.mk-fx-on.mk-3d-on body .summary-stats > *,
+html.mk-fx-on.mk-3d-on body .before-order-stats > *,
+html.mk-fx-on.mk-3d-on body .scan-stats > *,
+html.mk-fx-on.mk-3d-on body .download-box,
+html.mk-fx-on.mk-3d-on body .compare-preview-section{
+  background:linear-gradient(165deg, color-mix(in srgb, var(--surface-2) 80%, transparent), color-mix(in srgb, var(--surface) 70%, transparent))!important;
+  -webkit-backdrop-filter:blur(7px) saturate(1.15);
+  backdrop-filter:blur(7px) saturate(1.15);
+}

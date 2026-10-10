@@ -1,0 +1,234 @@
+/* MIKU PRODUCER + WORLD — คู่กับ js/mk-producer.js และ js/mk-world.js
+   ใช้กล่องสไตล์เกมเดียวกับ mk-stage.css (--mk-dlg-*) และสีธีมจาก miku.css */
+
+/* ================= หลอด EXP ใต้ชื่อแบรนด์ ================= */
+.mk-exp{ position:relative; display:flex; align-items:center; gap:6px; margin-top:3px; cursor:pointer; }
+.mk-exp em{ font:700 10px/1 'M PLUS Rounded 1c',sans-serif; font-style:normal; letter-spacing:.06em; color:var(--mk-ribbon-a); -webkit-text-fill-color:var(--mk-ribbon-a); white-space:nowrap; }
+.mk-exp-track{ width:84px; height:5px; border-radius:3px; overflow:hidden; background:color-mix(in srgb, var(--foreground) 14%, transparent); box-shadow:inset 0 0 0 1px rgba(0,0,0,.25); }
+.mk-exp-track i{ display:block; height:100%; width:0; background:linear-gradient(90deg, #58c8f8, #38a0f0); transition:width .9s cubic-bezier(.2,.8,.2,1); }
+html[data-prod-theme="light"] .mk-exp-track i{ background:linear-gradient(90deg, #1d6b66, #0f4a46); }
+.mk-exp.is-gain .mk-exp-track{ animation:mkExpGlow .9s ease-out; }
+@keyframes mkExpGlow{ 30%{ box-shadow:0 0 10px var(--mk-ribbon-a), inset 0 0 0 1px var(--mk-ribbon-a); } }
+.mk-exp-float{
+  position:absolute; left:92px; top:-6px; pointer-events:none; white-space:nowrap;
+  font:700 11px/1 'M PLUS Rounded 1c',sans-serif; color:var(--mk-ribbon-a); -webkit-text-fill-color:var(--mk-ribbon-a);
+  text-shadow:0 0 8px var(--mk-ribbon-b); animation:mkExpFloat 1.4s ease-out forwards;
+}
+@keyframes mkExpFloat{ from{ transform:translateY(6px); opacity:0 } 20%{ opacity:1 } to{ transform:translateY(-16px); opacity:0 } }
+
+/* ================= เลเวลอัป ================= */
+.mk-lvup{ position:fixed; inset:0; z-index:2147482998; display:flex; align-items:center; justify-content:center; cursor:pointer; background:rgba(0,0,0,.45); animation:mkFade .25s; }
+.mk-lvup.is-out{ animation:mkFadeOut .4s forwards; }
+.mk-lvup-rays{
+  position:absolute; left:50%; top:50%; width:160vmax; height:160vmax; margin:-80vmax 0 0 -80vmax;
+  background:repeating-conic-gradient(from 0deg, color-mix(in srgb, #58c8f8 26%, transparent) 0 7deg, transparent 7deg 18deg);
+  -webkit-mask:radial-gradient(circle, #000 0, #000 8%, transparent 42%); mask:radial-gradient(circle, #000 0, #000 8%, transparent 42%);
+  animation:mkRays 3.2s linear;
+}
+.mk-lvup-card{
+  position:relative; text-align:center; padding:16px 44px 20px; min-width:280px;
+  background:var(--mk-dlg-bg); color:var(--mk-dlg-fg); border:1px solid var(--mk-dlg-line); border-radius:12px;
+  box-shadow:0 0 40px rgba(88,200,248,.6), 0 20px 50px rgba(0,0,0,.4);
+  animation:mkWinIn .6s cubic-bezier(.2,1.4,.3,1);
+}
+.mk-lvup-card img{ display:block; width:180px; margin:-90px auto 4px; filter:drop-shadow(0 6px 14px rgba(0,0,0,.4)); animation:mkSleep 2s ease-in-out infinite; }
+.mk-lvup-card small{ display:block; font:700 13px/1 'M PLUS Rounded 1c',sans-serif; letter-spacing:.4em; color:#2878c8; }
+.mk-lvup-card b{ display:block; margin:6px 0 4px; font:700 54px/1 'M PLUS Rounded 1c',sans-serif; transition:transform .3s; }
+.mk-lvup-card b.is-up{ animation:mkLvPop .5s cubic-bezier(.2,1.6,.3,1); color:#2878c8; }
+@keyframes mkLvPop{ 0%{ transform:scale(1) } 40%{ transform:scale(1.5) } 100%{ transform:scale(1) } }
+.mk-lvup-card p{ margin:0; font-size:15px; }
+
+/* ================= บัตรโปรดิวเซอร์ / สรุปวันนี้ ================= */
+.mk-tc-ov{ position:fixed; inset:0; z-index:2147482994; display:flex; align-items:center; justify-content:center; padding:16px; background:rgba(0,0,0,.5); animation:mkFade .2s; }
+.mk-tc-ov.is-out{ animation:mkFadeOut .25s forwards; }
+.mk-tc{
+  width:min(720px, 100%); max-height:calc(100vh - 32px); overflow:auto;
+  background:linear-gradient(160deg, #e2f9f7, #cdedeb); color:#20272a;
+  border:3px solid #30383a; border-radius:14px;
+  box-shadow:inset 0 0 0 4px #e2f9f7, inset 0 0 0 7px var(--mk-trim), 0 24px 60px rgba(0,0,0,.5);
+  padding:16px 20px 18px; animation:mkWinIn .4s cubic-bezier(.2,1.2,.3,1);
+  font-family:'Mitr','Leelawadee UI',Tahoma,sans-serif;
+}
+.mk-tc-head{ display:flex; align-items:center; gap:12px; padding-bottom:10px; margin-bottom:12px; border-bottom:2px dashed rgba(48,56,58,.3); }
+.mk-tc-head b{ font:700 20px/1 'M PLUS Rounded 1c',sans-serif; letter-spacing:.2em; color:var(--mk-trim); }
+.mk-tc-head span{ margin-left:auto; font:600 13px/1 'M PLUS Rounded 1c',sans-serif; color:#516967; letter-spacing:.06em; }
+html body .mk-tc button{
+  all:unset; box-sizing:border-box; cursor:pointer; text-align:center; font:700 14px/1 'Mitr',sans-serif!important;
+  border-radius:6px!important; padding:9px 16px!important; color:#20272a!important; background:#c2e6e4!important; border:2px solid #30383a!important;
+}
+html body .mk-tc button:hover{ background:#d6f2f0!important; }
+html body .mk-tc .mk-tc-x{ padding:0!important; width:30px; height:30px; line-height:26px; font-size:20px!important; }
+.mk-tc-body{ display:grid; grid-template-columns:1fr 220px; gap:16px; }
+.mk-tc-name{ display:flex; align-items:center; gap:8px; font-weight:700; color:#516967; }
+html body .mk-tc-name input{
+  flex:1; min-width:0; padding:6px 10px!important; border-radius:6px!important; border:2px solid #30383a!important;
+  background:#f3fcfb!important; color:#20272a!important; font:700 16px/1.2 'Mitr',sans-serif!important; -webkit-text-fill-color:#20272a;
+}
+.mk-tc-lv{ margin:12px 0; }
+.mk-tc-lv b{ font:700 28px/1 'M PLUS Rounded 1c',sans-serif; }
+.mk-tc-exptrack{ display:block; height:8px; margin:6px 0 4px; border-radius:5px; background:#495958; border:2px solid #30383a; overflow:hidden; }
+.mk-tc-exptrack i{ display:block; height:100%; background:linear-gradient(90deg,#58c8f8,#2878c8); }
+.mk-tc-lv small{ color:#516967; font-weight:600; }
+.mk-tc-stats{ display:grid; grid-template-columns:1fr 1fr; gap:4px 16px; }
+.mk-tc-stat{ display:flex; justify-content:space-between; gap:8px; padding:4px 0; border-bottom:1px solid rgba(48,56,58,.15); font-size:13.5px; }
+.mk-tc-stat span{ color:#516967; }
+.mk-tc-stat b{ font-variant-numeric:tabular-nums; text-align:right; }
+.mk-tc-art{ position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:10px;
+  background:radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--mk-ribbon-a) 35%, transparent), transparent 70%), linear-gradient(160deg, var(--mk-bar-from), var(--mk-bar-to)); }
+.mk-tc-art img{ width:100%; filter:drop-shadow(0 8px 14px rgba(0,0,0,.45)); animation:mkSleep 3.5s ease-in-out infinite; }
+.mk-tc-types{ display:flex; gap:4px; margin:4px 0 10px; }
+.mk-tc-today{ display:flex; flex-wrap:wrap; gap:6px 14px; align-items:center; margin:14px 0 10px; padding:8px 12px; border-radius:8px; background:rgba(48,56,58,.08); font-weight:600; }
+.mk-tc-today b{ color:var(--mk-trim); font-family:'M PLUS Rounded 1c',sans-serif; letter-spacing:.1em; }
+.mk-tc-badges{ display:grid; grid-template-columns:repeat(6, 1fr); gap:8px; }
+.mk-badge{ display:flex; flex-direction:column; align-items:center; gap:4px; text-align:center; font-size:11px; font-weight:700; color:#718987; }
+.mk-badge i{
+  display:grid; place-items:center; width:48px; height:48px; font-style:normal; font-size:22px;
+  border-radius:50%;
+  background:#b0cdcb; color:#718987; filter:grayscale(1);
+}
+.mk-badge.is-on{ color:#20272a; }
+.mk-badge.is-on i{
+  filter:none; background:linear-gradient(160deg, var(--mk-ribbon-a), var(--mk-ribbon-b) 60%, var(--mk-trim));
+  box-shadow:inset 0 0 0 3px rgba(255,255,255,.4); animation:mkBadge 3s ease-in-out infinite;
+}
+@keyframes mkBadge{ 50%{ filter:brightness(1.15) drop-shadow(0 0 6px var(--mk-ribbon-a)); } }
+.mk-tc-foot{ display:flex; justify-content:flex-end; gap:8px; margin-top:14px; }
+@media (max-width:640px){
+  .mk-tc-body{ grid-template-columns:1fr; }
+  .mk-tc-art{ order:-1; max-height:200px; }
+  .mk-tc-art img{ width:60%; }
+  .mk-tc-badges{ grid-template-columns:repeat(4, 1fr); }
+  .mk-tc-stats{ grid-template-columns:1fr; }
+}
+/* สรุปวันนี้ */
+.mk-day{ width:min(480px, 100%); text-align:center; }
+.mk-day-lead{ margin:4px 0 12px; font-size:15px; }
+.mk-day-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+.mk-day-grid div{ padding:10px 4px; border-radius:8px; background:rgba(48,56,58,.08); }
+.mk-day-grid b{ display:block; font:700 26px/1.1 'M PLUS Rounded 1c',sans-serif; color:var(--mk-trim); font-variant-numeric:tabular-nums; }
+.mk-day-grid span{ font-size:12px; color:#516967; font-weight:600; }
+.mk-day-exp{ margin:12px 0 4px; font-weight:700; color:#2878c8; }
+.mk-day-mood{ margin:0; font-size:16px; font-weight:700; }
+
+/* ================= กล่องยืนยัน (ใช่ / ไม่ใช่) ================= */
+.mk-ask .mk-dlg-big{ cursor:default; width:100%; }
+.mk-ask-wrap{ width:min(640px, 100%); display:flex; flex-direction:column; align-items:flex-end; gap:8px; }
+.mk-ask-menu{
+  display:flex; flex-direction:column; padding:6px; margin-right:10px;
+  background:var(--mk-dlg-bg); border:1px solid var(--mk-dlg-line); border-radius:10px;
+  box-shadow:0 12px 30px rgba(0,0,0,.35);
+  animation:mkDlgIn .2s;
+}
+html body .mk-ask-menu button{
+  all:unset; box-sizing:border-box; cursor:pointer; position:relative; display:block; text-align:left;
+  padding:7px 22px 7px 30px!important; min-width:130px; height:auto!important; min-height:0!important; margin:0!important;
+  font:700 16px/1.2 'Mitr',sans-serif!important; color:var(--mk-dlg-fg)!important; -webkit-text-fill-color:var(--mk-dlg-fg);
+  background:transparent!important; border:0!important; border-radius:4px!important; box-shadow:none!important; clip-path:none!important; transform:none!important;
+}
+html body .mk-ask-menu button.is-on::before{ content:"▶"; position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:12px; color:var(--mk-trim); animation:mkNext .6s steps(2) infinite; }
+html body .mk-ask-menu button.is-on{ background:color-mix(in srgb, var(--mk-ribbon-a) 25%, transparent)!important; }
+html body .mk-ask-menu button:focus-visible{ outline:none!important; }
+
+/* ================= พักหน้าจอ ================= */
+.mk-idle{
+  position:fixed; inset:0; z-index:2147482993; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+  background:radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--mk-bar-from) 70%, #000), #020203 80%);
+  color:#fff; animation:mkFade 1.2s; cursor:none;
+}
+.mk-idle.is-out{ animation:mkFadeOut .5s forwards; }
+.mk-idle-stars{
+  position:absolute; inset:0; opacity:.7;
+  background-image:radial-gradient(1.5px 1.5px at 12% 20%, #fff, transparent), radial-gradient(1px 1px at 30% 70%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 55% 15%, #fff, transparent), radial-gradient(1px 1px at 72% 55%, #fff, transparent),
+    radial-gradient(2px 2px at 88% 30%, #fff, transparent), radial-gradient(1px 1px at 40% 40%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 20% 85%, #fff, transparent), radial-gradient(1px 1px at 92% 80%, #fff, transparent);
+  animation:mkTwinkle 4s ease-in-out infinite alternate;
+}
+@keyframes mkTwinkle{ to{ opacity:.25 } }
+.mk-idle-art{ position:relative; width:min(46vw, 420px); }
+.mk-idle-art img{ width:100%; display:block; filter:brightness(.55) saturate(.8) drop-shadow(0 0 30px color-mix(in srgb, var(--mk-ribbon-b) 40%, transparent)); animation:mkBreath 5s ease-in-out infinite; }
+@keyframes mkBreath{ 50%{ transform:scale(1.03) translateY(-6px); } }
+.mk-idle-z{ position:absolute; right:12%; top:10%; font:700 28px/1 'M PLUS Rounded 1c',sans-serif; color:var(--mk-ribbon-a); opacity:0; animation:mkZzz 3.6s ease-in-out infinite; }
+.mk-idle-z.z2{ font-size:38px; animation-delay:1.2s; }
+.mk-idle-z.z3{ font-size:22px; animation-delay:2.4s; }
+.mk-idle-clock{ text-align:center; }
+.mk-idle-clock b{ display:block; font:700 clamp(56px, 10vw, 120px)/1 'M PLUS Rounded 1c',sans-serif; letter-spacing:.06em; text-shadow:0 0 30px color-mix(in srgb, var(--mk-ribbon-b) 50%, transparent); }
+.mk-idle-clock span{ font-size:16px; opacity:.75; }
+.mk-idle p{ margin:6px 0 0; font-size:14px; opacity:.6; }
+
+/* ================= หน้าต่างคีย์ลัด + Command palette เดิม: สไตล์เกม ================= */
+html body #ppShortcutsModal, html body .fx-command-box{
+  background:var(--mk-dlg-bg)!important; color:var(--mk-dlg-fg)!important;
+  border:1px solid var(--mk-dlg-line)!important; border-radius:12px!important;
+  box-shadow:0 24px 60px rgba(0,0,0,.5)!important;
+}
+html body #ppShortcutsModal .pp-short-title{ font-family:'M PLUS Rounded 1c',sans-serif!important; color:var(--mk-trim)!important; letter-spacing:.06em; }
+html body #ppShortcutsModal .pp-short-row{ border-color:rgba(48,56,58,.15)!important; color:var(--mk-dlg-fg)!important; }
+html body #ppShortcutsModal .pp-key, html body .fx-command-box .fx-key{
+  background:#30383a!important; color:#56f6eb!important; border:0!important; border-radius:4px!important;
+  font-family:'M PLUS Rounded 1c',sans-serif!important; box-shadow:0 2px 0 #14181a!important;
+}
+html body #ppShortcutsModal .pp-short-close{ color:var(--mk-dlg-fg)!important; background:transparent!important; border:2px solid var(--mk-dlg-line)!important; }
+html body #ppShortcutsModal .mk-short-sec{ margin-top:8px; border-top:2px dashed rgba(48,56,58,.3)!important; font:700 13px/1 'M PLUS Rounded 1c',sans-serif; color:var(--mk-trim)!important; letter-spacing:.12em; }
+html body .fx-command-box input{ background:#f3fcfb!important; color:#20272a!important; border:2px solid #30383a!important; -webkit-text-fill-color:#20272a; }
+html body .fx-command-box .fx-command-item{ color:var(--mk-dlg-fg)!important; background:transparent!important; border-radius:6px!important; }
+html body .fx-command-box .fx-command-item:hover, html body .fx-command-box .fx-command-item:focus{ background:color-mix(in srgb, var(--mk-ribbon-a) 25%, transparent)!important; }
+
+/* ================= สภาพอากาศ ================= */
+#mkWeather{ position:fixed; inset:0; z-index:58; pointer-events:none; }
+html.mk-fx-on[data-mk-weather="fog"] body::after{
+  content:""; position:fixed; inset:0; z-index:57; pointer-events:none;
+  background:
+    radial-gradient(60% 40% at 20% 70%, rgba(200,200,205,.16), transparent 70%),
+    radial-gradient(50% 35% at 80% 30%, rgba(200,200,205,.12), transparent 70%);
+  animation:mkFog 30s ease-in-out infinite alternate;
+}
+@keyframes mkFog{ to{ transform:translateX(6%) } }
+.mk-weather-btn, .mk-bgm-toggle{ min-width:38px!important; }
+.mk-bgm-toggle.is-off{ opacity:.45; filter:grayscale(1); }
+
+/* ================= ตาราง ================= */
+@media (prefers-reduced-motion:no-preference){
+  html.mk-fx-on body table tbody tr:hover > td{
+    background-color:color-mix(in srgb, var(--mk-ribbon-a) 9%, transparent)!important;
+    box-shadow:inset 0 1px 0 color-mix(in srgb, var(--mk-ribbon-a) 35%, transparent), inset 0 -1px 0 color-mix(in srgb, var(--mk-ribbon-a) 35%, transparent);
+  }
+  html.mk-fx-on body table tbody tr:hover > td:first-child{
+    box-shadow:inset 0 1px 0 color-mix(in srgb, var(--mk-ribbon-a) 35%, transparent), inset 0 -1px 0 color-mix(in srgb, var(--mk-ribbon-a) 35%, transparent);
+  }
+}
+/* ระหว่างกำลังโหลด: แถบแสงวิ่งแทนช่องว่าง */
+html body .mk-loading::after{
+  content:""; display:block; height:132px; margin-top:10px; border-radius:4px;
+  background:
+    linear-gradient(100deg, transparent 30%, color-mix(in srgb, var(--mk-ribbon-a) 22%, transparent) 50%, transparent 70%) 0 0/250% 100%,
+    repeating-linear-gradient(180deg, color-mix(in srgb, var(--foreground) 9%, transparent) 0 18px, transparent 18px 26px);
+  animation:mkShimmer 1.3s linear infinite;
+}
+@keyframes mkShimmer{ from{ background-position:120% 0, 0 0 } to{ background-position:-120% 0, 0 0 } }
+
+@media (prefers-reduced-motion:reduce){
+  .mk-idle, .mk-lvup{ display:none!important; }
+  #mkWeather{ display:none!important; }
+}
+
+/* ================= เมนู ✦ รวมปุ่มเปิด/ปิด ================= */
+.mk-dock{ position:relative; flex:0 0 auto; }
+html body .mk-dock-btn{ min-width:38px; font-size:16px!important; letter-spacing:0!important; }
+.mk-dock.is-open .mk-dock-btn{ box-shadow:0 0 14px color-mix(in srgb, var(--mk-ribbon-a) 55%, transparent); }
+.mk-dock-panel{
+  position:absolute; right:0; top:calc(100% + 8px); z-index:120; display:none; min-width:230px; padding:6px;
+  background:linear-gradient(165deg, var(--surface-2), var(--surface)); border:1px solid var(--mk-trim); border-radius:4px;
+  box-shadow:0 16px 40px rgba(0,0,0,.45);
+}
+.mk-dock.is-open .mk-dock-panel{ display:flex; flex-direction:column; gap:4px; animation:mkPickIn .16s cubic-bezier(.2,.9,.2,1); }
+html body .mk-dock-panel > button{
+  display:flex!important; align-items:center; justify-content:flex-start; gap:10px; width:100%!important; height:36px;
+  margin:0!important; padding:0 12px!important; clip-path:none!important; text-align:left;
+}
+html body .mk-dock-panel > button::after{
+  content:attr(data-label); margin-left:auto; font:600 12.5px/1 'Mitr',sans-serif; letter-spacing:0;
+  color:var(--foreground); opacity:.85;
+}
+html body .mk-dock-panel > button[aria-pressed="false"]::after{ opacity:.5; }
+

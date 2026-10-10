@@ -1,0 +1,140 @@
+/* MIKU EPIC — คู่กับ js/mk-epic.js (MODULE CHANGE · COMBO · ฉากเปลี่ยนหน้า · การ์ดโฮโลแกรม) */
+
+/* ================= MODULE CHANGE ================= */
+.mk-epic-mod{ position:fixed; inset:0; z-index:2147483100; display:grid; place-items:center; overflow:hidden; cursor:pointer; }
+.mk-epic-mod.is-out{ animation:mkFadeOut .5s forwards; }
+.mk-mod-bg{ position:absolute; inset:0; background:radial-gradient(circle at 50% 50%, rgba(10,60,57,.95), rgba(0,0,0,.98) 70%); animation:mkFade .3s; }
+.mk-epic-mod.is-light .mk-mod-bg{ background:radial-gradient(circle at 50% 50%, rgba(20,80,76,.95), rgba(0,10,8,.98) 70%); }
+/* วงแหวนแสงสีรุ้ง (สัญลักษณ์โมดูล) */
+.mk-mod-ring{
+  position:absolute; width:min(70vmin, 620px); aspect-ratio:1; border-radius:50%;
+  background:conic-gradient(from 0deg, #ff4a9b, #53f6eb, #53f6eb, #4afff3, #4ad8ff, #4afff3, #ff4ad8, #ff4a9b);
+  -webkit-mask:radial-gradient(circle, transparent 0 60%, #000 61% 66%, transparent 67% 74%, #000 75% 78%, transparent 79%);
+  mask:radial-gradient(circle, transparent 0 60%, #000 61% 66%, transparent 67% 74%, #000 75% 78%, transparent 79%);
+  filter:drop-shadow(0 0 18px rgba(255,255,255,.6)); opacity:0;
+  animation:mkRingIn .5s .15s forwards, mkRingSpin 2.4s linear infinite;
+}
+.mk-mod-ring.d2{ width:min(50vmin, 440px); animation:mkRingIn .5s .3s forwards, mkRingSpin 1.6s linear infinite reverse; }
+@keyframes mkRingIn{ from{ opacity:0; transform:scale(.3) } to{ opacity:1 } }
+@keyframes mkRingSpin{ to{ rotate:360deg } }
+.mk-mod-stone{ position:absolute; width:90px; opacity:0; filter:drop-shadow(0 0 20px #fff) drop-shadow(0 0 40px #6ad8d1); animation:mkStone 1.2s cubic-bezier(.2,1.4,.3,1) forwards; z-index:3; }
+@keyframes mkStone{ 0%{ opacity:0; transform:scale(.2) rotate(-180deg) } 40%{ opacity:1; transform:scale(1.2) rotate(0) } 80%{ opacity:1; transform:scale(1) } 100%{ opacity:0; transform:scale(2.5) } }
+/* ภาพเดิม: เงาขาวเรืองแสง → แตก */
+.mk-mod-old{ position:absolute; width:min(56vmin, 480px); opacity:0; filter:brightness(0) invert(1) drop-shadow(0 0 24px #fff) drop-shadow(0 0 50px #6ad8d1); animation:mkModOld 1.3s ease-in forwards; z-index:2; }
+@keyframes mkModOld{ 0%{ opacity:0; transform:scale(.8) } 20%{ opacity:1 } 60%{ transform:scale(1.02) } 75%{ transform:scale(1.06); opacity:1 } 100%{ transform:scale(1.25); opacity:0 } }
+.mk-mod-shards i{
+  position:absolute; left:50%; top:50%; width:22px; height:34px; margin:-17px 0 0 -11px; opacity:0; z-index:4;
+  background:linear-gradient(160deg, #fff, #d8fffc); clip-path:polygon(50% 0,100% 40%,70% 100%,0 70%);
+  box-shadow:0 0 12px #fff; animation:mkShard .9s cubic-bezier(.2,.8,.3,1) 1.1s forwards;
+}
+@keyframes mkShard{ 0%{ opacity:1; transform:translate(0,0) rotate(0) } 100%{ opacity:0; transform:translate(var(--dx), var(--dy)) rotate(var(--r)) scale(.4) } }
+.mk-mod-flash{ position:absolute; inset:0; background:#fff; opacity:0; animation:mkModFlash 1s ease-out 1.1s forwards; z-index:5; pointer-events:none; }
+@keyframes mkModFlash{ 0%{ opacity:0 } 15%{ opacity:1 } 100%{ opacity:0 } }
+/* ภาพใหม่ */
+.mk-mod-new{ position:absolute; width:min(60vmin, 520px); opacity:0; z-index:3; filter:drop-shadow(0 0 30px var(--mk-ribbon-b)); animation:mkModNew 1.6s cubic-bezier(.2,1.3,.3,1) 1.2s forwards; }
+@keyframes mkModNew{ 0%{ opacity:0; transform:scale(.6); filter:brightness(4) } 40%{ opacity:1; transform:scale(1.08); filter:brightness(1.6) drop-shadow(0 0 40px #fff) } 100%{ opacity:1; transform:scale(1); filter:brightness(1) drop-shadow(0 0 30px var(--mk-ribbon-b)) } }
+.mk-mod-title{ position:absolute; bottom:9vh; left:0; right:0; text-align:center; z-index:6; opacity:0; animation:mkModTitle .8s cubic-bezier(.2,1.4,.3,1) 1.7s forwards; }
+@keyframes mkModTitle{ from{ opacity:0; transform:translateY(30px) scale(.8) } to{ opacity:1; transform:none } }
+.mk-mod-title small{ display:block; font:700 16px/1 'M PLUS Rounded 1c',sans-serif; letter-spacing:.6em; color:#fff; text-shadow:0 0 14px #6ad8d1; margin-bottom:10px; }
+.mk-mod-title b{ display:block; font:700 clamp(32px,6vw,72px)/1 'M PLUS Rounded 1c',sans-serif; letter-spacing:.12em;
+  background:linear-gradient(90deg, #ff4a9b, #53f6eb, #53f6eb, #4afff3, #4ad8ff, #4afff3); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 16px rgba(255,255,255,.5)) drop-shadow(0 4px 0 rgba(0,0,0,.4)); }
+
+@keyframes mkMtBlink{ 50%{ opacity:.2 } }
+
+/* ================= COMBO / OVERDRIVE (สไตล์เกมจังหวะ) ================= */
+.mk-combo{
+  position:fixed; right:22px; top:22px; z-index:2147482985; display:none; min-width:150px; padding:10px 18px 12px; text-align:center; pointer-events:none;
+  background:var(--surface); border:2px solid var(--mk-ribbon-a); border-radius:22px; color:var(--foreground);
+  box-shadow:0 14px 34px rgba(0,0,0,.18);
+}
+.mk-combo.is-on{ display:block; }
+.mk-combo.is-pop{ animation:mkComboPop .35s cubic-bezier(.2,1.6,.3,1); }
+@keyframes mkComboPop{ 40%{ transform:scale(1.15) rotate(-3deg) } }
+.mk-combo small{ display:block; font:800 10px/1 'M PLUS Rounded 1c',sans-serif; letter-spacing:.32em; color:var(--mk-ribbon-b); }
+.mk-combo b{ display:block; margin-top:2px; font:800 40px/1 'M PLUS Rounded 1c',sans-serif;
+  background:linear-gradient(180deg, var(--mk-ribbon-a), var(--mk-ribbon-b)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+.mk-combo i{ display:block; height:6px; margin-top:8px; border-radius:999px; background:var(--surface-3); overflow:hidden; }
+.mk-combo em{ display:block; height:100%; width:100%; border-radius:999px; background:linear-gradient(90deg, var(--mk-ribbon-a), var(--mk-ribbon-b)); }
+.mk-combo strong{ display:block; margin-top:6px; font:800 12px/1 'M PLUS Rounded 1c',sans-serif; letter-spacing:.14em; color:var(--mk-ribbon-a); }
+.mk-combo.is-hot{ border-color:var(--mk-ribbon-b); box-shadow:0 0 0 4px color-mix(in srgb, var(--mk-ribbon-b) 20%, transparent), 0 14px 34px rgba(0,0,0,.18); }
+.mk-combo.is-hot strong{ color:var(--mk-ribbon-b); animation:mkMtBlink .5s steps(2) infinite; }
+.mk-combo.is-hyper{ border-color:transparent; background:linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(90deg, var(--mk-ribbon-a), #3eeade, var(--mk-ribbon-b)) border-box; }
+/* OVERDRIVE: ขอบจอเป็นแท่งอีควอไลเซอร์นีออนเต้นตามจังหวะ (ซ้าย-ขวา) */
+html.mk-overdrive body::before{
+  content:""; position:fixed; inset:0; z-index:2147482984; pointer-events:none;
+  background:
+    repeating-linear-gradient(180deg, var(--mk-ribbon-a) 0 6px, transparent 6px 12px) left/14px 100% no-repeat,
+    repeating-linear-gradient(180deg, var(--mk-ribbon-b) 0 6px, transparent 6px 12px) right/14px 100% no-repeat;
+  -webkit-mask:linear-gradient(0deg, #000 0%, transparent 70%); mask:linear-gradient(0deg, #000 0%, transparent 70%);
+  animation:mkOverdrive .45s ease-in-out infinite alternate;
+}
+html.mk-laser body::before{ background:radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.35), transparent 60%); -webkit-mask:none; mask:none; }
+@keyframes mkOverdrive{ from{ -webkit-mask-size:100% 100%; mask-size:100% 100%; opacity:1 } to{ -webkit-mask-size:100% 160%; mask-size:100% 160%; opacity:.7 } }
+
+/* ================= เปลี่ยนหน้า: MIKU ไถลผ่านจอ ลากบรรทัดโน้ตตามหลัง ================= */
+.mk-swoop{ position:fixed; inset:0; z-index:2147482983; pointer-events:none; overflow:hidden; }
+.mk-sw-band{ position:absolute; top:42%; height:70px; width:70vw; left:-80vw; border-radius:40px;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 12px, color-mix(in srgb, var(--mk-ribbon-a) 70%, transparent) 12px 14px) ,
+    linear-gradient(90deg, transparent, color-mix(in srgb, var(--mk-ribbon-a) 16%, transparent));
+  -webkit-mask:linear-gradient(90deg, transparent, #000 60%); mask:linear-gradient(90deg, transparent, #000 60%);
+  animation:mkSwBand .7s cubic-bezier(.5,0,.3,1) forwards; }
+.mk-sw-band.b2{ top:auto; bottom:30%; height:40px; width:40vw; animation-delay:.05s;
+  background:radial-gradient(circle at 20px 50%, var(--mk-ribbon-b) 6px, transparent 7px) 0 0/64px 100%;
+}
+.mk-swoop img{ position:absolute; top:22%; left:-40vw; width:min(30vw, 360px); filter:drop-shadow(0 10px 22px rgba(0,0,0,.25)); animation:mkSwMon .7s cubic-bezier(.5,0,.4,1) forwards; }
+.mk-swoop img.is-flip{ scale:-1 1; }
+.mk-swoop.to-l .mk-sw-band{ animation-name:mkSwBandL; left:auto; right:-80vw; -webkit-mask:linear-gradient(270deg, transparent, #000 60%); mask:linear-gradient(270deg, transparent, #000 60%); }
+.mk-swoop.to-l img{ left:auto; right:-40vw; animation-name:mkSwMonL; }
+@keyframes mkSwBand{ to{ transform:translateX(230vw); } }
+@keyframes mkSwBandL{ to{ transform:translateX(-230vw); } }
+@keyframes mkSwMon{ 0%{ transform:translate(0,20px) } 50%{ transform:translate(90vw,-20px) } 100%{ transform:translate(180vw,10px) } }
+@keyframes mkSwMonL{ 0%{ transform:translate(0,20px) } 50%{ transform:translate(-90vw,-20px) } 100%{ transform:translate(-180vw,10px) } }
+
+/* ================= การ์ดโฮโลแกรม (แสงรุ้งฟอยล์ตามเมาส์) ================= */
+.mk-tc, .mk-skucard, .mk-lvup-card, .mk-win-card{ position:relative; }
+.mk-tc::after, .mk-skucard::after, .mk-lvup-card::after, .mk-win-card::after{
+  content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none; z-index:5; mix-blend-mode:color-dodge; opacity:.55;
+  background:
+    radial-gradient(circle at var(--hx,50%) var(--hy,50%), rgba(255,255,255,.45), transparent 35%),
+    linear-gradient(115deg, transparent 20%, rgba(255,0,170,.22) 35%, rgba(0,255,255,.22) 45%, rgba(13,242,227,.22) 55%, rgba(0,255,238,.2) 65%, transparent 80%);
+  background-size:100% 100%, 250% 250%;
+  background-position:center, var(--hx,50%) var(--hy,50%);
+  transition:background-position .1s;
+}
+.mk-badge.is-on i{ background-size:200% 200%!important; }
+
+
+/* ================= MODULE CHANGE แบบเปลี่ยนชุดบนเวที (ทับฉากเดิม) =================
+   ม่านเวทีเข้า-ออก · สปอตไลต์วงกลมบนพื้น · ภาพเดิมหลบลง · คอนเฟตติมิ้นต์/ชมพู · ภาพใหม่เด้งขึ้นกลางสปอตไลต์ */
+.mk-mod-bg{ background:
+    radial-gradient(ellipse 35% 80% at 50% 0%, rgba(255,255,255,.18), transparent 70%),
+    linear-gradient(180deg, #071114, #0d1d22)!important; }
+.mk-epic-mod.is-light .mk-mod-bg{ background:
+    radial-gradient(ellipse 35% 80% at 50% 0%, rgba(255,255,255,.4), transparent 70%),
+    linear-gradient(180deg, #1a9d95, #0f5d61)!important; }
+.mk-epic-mod::before, .mk-epic-mod::after{ /* ม่านเวที */
+  content:""; position:absolute; top:0; bottom:0; width:52%; z-index:7; pointer-events:none;
+  background:repeating-linear-gradient(90deg, #b3145f 0 26px, #e12885 26px 44px, #c2185b 44px 60px);
+  box-shadow:inset 0 -30px 60px rgba(0,0,0,.35);
+  animation:mkCurtain 1.5s cubic-bezier(.6,0,.3,1) forwards;
+}
+.mk-epic-mod::before{ left:0; transform-origin:left; }
+.mk-epic-mod::after{ right:0; transform-origin:right; }
+@keyframes mkCurtain{ 0%{ transform:scaleX(0) } 40%,55%{ transform:scaleX(1) } 100%{ transform:scaleX(0) } }
+.mk-mod-ring{ background:radial-gradient(ellipse, rgba(255,255,255,.55), transparent 65%)!important; -webkit-mask:none!important; mask:none!important;
+  width:min(60vmin, 520px)!important; aspect-ratio:3/1!important; top:auto; bottom:6vh; filter:none!important; animation:mkRingIn .5s 1s forwards!important; }
+.mk-mod-ring.d2{ display:none; }
+.mk-mod-stone{ display:none!important; }
+.mk-mod-old{ filter:none!important; animation:mkModOldOut .7s ease-in forwards!important; }
+@keyframes mkModOldOut{ 0%{ opacity:1; transform:none } 100%{ opacity:0; transform:translateY(40px) scale(.95) } }
+.mk-mod-shards i{ width:12px!important; height:12px!important; border-radius:3px; clip-path:none!important; box-shadow:none!important;
+  background:var(--mk-ribbon-a)!important; animation-delay:.85s!important; }
+.mk-mod-shards i:nth-child(2n){ background:var(--mk-ribbon-b)!important; border-radius:50%; }
+.mk-mod-shards i:nth-child(3n){ background:#3eeade!important; }
+.mk-mod-flash{ background:radial-gradient(circle, rgba(255,255,255,.9), transparent 60%)!important; animation-delay:.8s!important; }
+.mk-mod-new{ filter:drop-shadow(0 12px 30px rgba(0,0,0,.35))!important; animation:mkModNewUp 1.1s cubic-bezier(.3,1.5,.5,1) .85s forwards!important; }
+@keyframes mkModNewUp{ 0%{ opacity:0; transform:translateY(60px) scale(.9) } 100%{ opacity:1; transform:none } }
+.mk-mod-title b{ background:linear-gradient(90deg, var(--mk-ribbon-a), #ffffff, var(--mk-ribbon-b))!important; -webkit-background-clip:text!important; background-clip:text!important; }
+.mk-mod-title small{ text-shadow:none!important; }

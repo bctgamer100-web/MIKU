@@ -1,0 +1,203 @@
+/* MIKU BUDDY / LIVE / SKU CARD / ONLINE — คู่กับ js/mk-buddy.js, mk-battle.js, mk-skucard.js, mk-online.js */
+
+/* ================= คู่หู ================= */
+.mk-buddy{
+  position:fixed; z-index:2147482980; width:130px; height:120px; touch-action:none; user-select:none;
+  --mk-bflip:1; --mk-btilt:0deg;
+}
+.mk-buddy-body{ position:absolute; inset:0; display:flex; align-items:flex-end; justify-content:center; cursor:grab; animation:mkBuddyBob 3.2s ease-in-out infinite; }
+.mk-buddy.is-drag .mk-buddy-body{ cursor:grabbing; animation:none; }
+.mk-buddy img{
+  width:118px; display:block; pointer-events:none;
+  transform:scaleX(var(--mk-bflip)) rotate(var(--mk-btilt)); transition:transform .35s cubic-bezier(.2,.8,.2,1);
+  filter:drop-shadow(0 6px 8px rgba(0,0,0,.35)) drop-shadow(0 0 10px color-mix(in srgb, var(--mk-ribbon-b) 35%, transparent));
+}
+.mk-buddy-shadow{ position:absolute; left:28px; right:28px; bottom:-4px; height:10px; border-radius:50%; background:rgba(0,0,0,.28); filter:blur(3px); animation:mkBuddyShadow 3.2s ease-in-out infinite; }
+@keyframes mkBuddyBob{ 50%{ transform:translateY(-7px); } }
+@keyframes mkBuddyShadow{ 50%{ transform:scaleX(.82); opacity:.7; } }
+.mk-buddy.m-happy .mk-buddy-body{ animation:mkBuddyHop .55s cubic-bezier(.3,1.6,.5,1) 2; }
+@keyframes mkBuddyHop{ 40%{ transform:translateY(-26px) scale(1.06); } }
+.mk-buddy.m-cheer .mk-buddy-body{ animation:mkBuddyHop .4s ease-in-out 4; }
+.mk-buddy.m-angry .mk-buddy-body{ animation:mkBuddyShake .1s linear 8; }
+.mk-buddy.m-angry img{ filter:drop-shadow(0 0 14px #ff2084) brightness(1.15); }
+@keyframes mkBuddyShake{ 25%{ transform:translateX(-4px) rotate(-3deg); } 75%{ transform:translateX(4px) rotate(3deg); } }
+.mk-buddy.m-pet .mk-buddy-body{ animation:mkBuddySquish .45s ease-out; }
+@keyframes mkBuddySquish{ 30%{ transform:scale(1.08, .9) translateY(4px); } 70%{ transform:scale(.96, 1.05); } }
+.mk-buddy.m-glow img{ animation:mkBuddyGlow .5s ease-in-out 5 alternate; }
+@keyframes mkBuddyGlow{ to{ filter:drop-shadow(0 0 22px #58c8f8) brightness(1.3); } }
+.mk-buddy.is-sleep .mk-buddy-body{ animation:mkBreath 4.5s ease-in-out infinite; }
+.mk-buddy.is-sleep img{ filter:brightness(.6) saturate(.7) drop-shadow(0 6px 8px rgba(0,0,0,.35)); transform:scaleX(var(--mk-bflip)) rotate(14deg) translateY(10px); }
+.mk-buddy-z{ position:absolute; right:14px; top:6px; font:700 16px/1 'M PLUS Rounded 1c',sans-serif; color:var(--mk-ribbon-a); opacity:0; pointer-events:none; }
+.mk-buddy.is-sleep .mk-buddy-z{ animation:mkZzz 3s ease-in-out infinite; }
+.mk-buddy.is-sleep .mk-buddy-z.z2{ font-size:22px; animation-delay:1.5s; }
+.mk-buddy-bubble{
+  position:absolute; left:50%; bottom:calc(100% + 4px); transform:translateX(-30%) scale(.6); transform-origin:30% 100%;
+  width:max-content; max-width:240px; padding:8px 12px; opacity:0; pointer-events:none;
+  background:var(--mk-dlg-bg); color:var(--mk-dlg-fg); border:1px solid var(--mk-dlg-line); border-radius:12px;
+  box-shadow:0 8px 20px rgba(0,0,0,.35);
+  font:700 13.5px/1.35 'Mitr',sans-serif; transition:opacity .2s, transform .25s cubic-bezier(.2,1.4,.3,1);
+}
+.mk-buddy-bubble::after{ content:""; position:absolute; left:26%; top:100%; border:9px solid transparent; border-top-color:var(--mk-dlg-line); }
+.mk-buddy.is-talk .mk-buddy-bubble{ opacity:1; transform:translateX(-30%) scale(1); }
+.mk-buddy-heart{ position:absolute; bottom:70px; font-size:20px; color:#ff5c8a; pointer-events:none; text-shadow:0 2px 0 rgba(0,0,0,.2); animation:mkHeart 1.3s ease-out forwards; }
+@keyframes mkHeart{ from{ transform:translateY(0) scale(.6); opacity:1; } to{ transform:translateY(-60px) scale(1.2); opacity:0; } }
+.mk-mic.is-live{ animation:mkMicPulse .9s ease-in-out infinite; box-shadow:0 0 0 2px #ff4a9b!important; }
+@keyframes mkMicPulse{ 50%{ box-shadow:0 0 0 2px #ff4a9b, 0 0 18px #ff4a9b!important; } }
+.mk-dock-panel > button.is-off{ opacity:.55; }
+
+/* ================= ฉากดวลเพลง LIVE (เวทีคอนเสิร์ต) ================= */
+.mk-battle{
+  position:fixed; inset:0; z-index:2147482999; display:flex; flex-direction:column; cursor:pointer; overflow:hidden;
+  background:
+    radial-gradient(ellipse 30% 70% at 22% 0%, rgba(57,197,187,.35), transparent 70%),
+    radial-gradient(ellipse 30% 70% at 78% 0%, rgba(225,40,133,.32), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 50% 100%, rgba(57,197,187,.25), transparent 70%),
+    linear-gradient(180deg, #05080b 0%, #0b1418 60%, #071013 100%);
+  font-family:'Mitr','Leelawadee UI',Tahoma,sans-serif;
+}
+.mk-battle.is-day{ background:
+    radial-gradient(ellipse 30% 70% at 22% 0%, rgba(255,255,255,.55), transparent 70%),
+    radial-gradient(ellipse 30% 70% at 78% 0%, rgba(255,160,210,.5), transparent 70%),
+    linear-gradient(180deg, #1a9d95 0%, #137a7f 60%, #0c4f52 100%); }
+.mk-battle.is-out{ animation:mkFadeOut .45s forwards; }
+/* ม่านเวทีเปิด */
+.mk-bt-bars{ position:absolute; inset:0; z-index:5; pointer-events:none;
+  background:linear-gradient(90deg,#7a0f3f,#c2185b 40%,#7a0f3f) left/50% 100% no-repeat, linear-gradient(90deg,#7a0f3f,#c2185b 60%,#7a0f3f) right/50% 100% no-repeat; transition:background-size .7s cubic-bezier(.7,0,.3,1); }
+.mk-battle.is-in .mk-bt-bars{ background-size:0% 100%, 0% 100%; }
+.mk-bt-field{ position:relative; flex:1; }
+/* จอ LED หลังเวที + แท่งไฟเชียร์ของแฟนๆ */
+.mk-bt-field::before{ content:""; position:absolute; left:6%; right:6%; top:8%; height:46%; border-radius:6px; opacity:.35;
+  background:repeating-linear-gradient(90deg, rgba(57,197,187,.5) 0 2px, transparent 2px 10px), repeating-linear-gradient(0deg, rgba(57,197,187,.5) 0 2px, transparent 2px 10px);
+  -webkit-mask:radial-gradient(ellipse at 50% 50%, #000 30%, transparent 75%); mask:radial-gradient(ellipse at 50% 50%, #000 30%, transparent 75%); animation:mkLed 2.4s ease-in-out infinite alternate; }
+@keyframes mkLed{ to{ opacity:.6; } }
+.mk-bt-field::after{ content:""; position:absolute; left:0; right:0; bottom:0; height:16%;
+  background:radial-gradient(circle at 6px 10px, #39c5bb 2px, transparent 3.5px) 0 0/26px 22px, radial-gradient(circle at 19px 4px, #ff5fb4 2px, transparent 3.5px) 0 0/26px 22px, linear-gradient(180deg, transparent, rgba(0,0,0,.65));
+  animation:mkPenlight 1.1s ease-in-out infinite alternate; }
+@keyframes mkPenlight{ to{ background-position:0 -5px, 0 4px, 0 0; } }
+.mk-bt-foe{ position:absolute; right:12%; bottom:18%; width:260px; height:220px; transform:translateX(120vw); transition:transform .8s cubic-bezier(.2,.9,.3,1) .35s; }
+.mk-bt-me{ position:absolute; left:10%; bottom:14%; width:340px; height:300px; transform:translateY(120%); transition:transform .8s cubic-bezier(.2,1.2,.3,1) .35s; }
+.mk-battle.is-in .mk-bt-foe, .mk-battle.is-in .mk-bt-me{ transform:none; }
+.mk-bt-foe-art{ position:absolute; left:50%; bottom:0; width:170px; margin-left:-85px; animation:mkBuddyBob 1.6s ease-in-out infinite; }
+.mk-bt-foe-art svg{ width:100%; display:block; }
+.mk-bt-me-art{ position:absolute; left:50%; bottom:0; width:330px; margin-left:-165px; filter:drop-shadow(0 0 18px rgba(57,197,187,.55)); animation:mkBuddyBob 2.4s ease-in-out infinite; }
+.mk-bt-me-art.is-flip{ scale:-1 1; } /* ใช้ scale แยกจาก transform ของแอนิเมชันลอย */
+.mk-battle.is-go .mk-bt-me-art{ animation:mkLunge .5s ease-out; }
+@keyframes mkLunge{ 50%{ translate:0 -24px; } }
+.mk-battle.is-hit .mk-bt-foe-art{ animation:mkHitBlink .12s steps(2) 6, mkBuddyShake .1s linear 6; }
+@keyframes mkHitBlink{ 50%{ opacity:.15; } }
+.mk-battle.is-clear .mk-bt-foe-art{ animation:none; transition:transform .7s ease-in, opacity .7s; transform:translateY(80px); opacity:0; }
+.mk-battle.is-flee .mk-bt-foe-art{ animation:none; transition:transform .9s cubic-bezier(.5,0,.8,.4); transform:translateX(70vw) rotate(20deg); }
+/* คลื่นเสียง Miku Miku Beam */
+.mk-bt-beam{
+  position:absolute; left:30%; bottom:34%; width:46%; height:30px; transform-origin:0 50%; transform:rotate(-3deg) scaleX(0); opacity:0;
+  background:repeating-linear-gradient(90deg, transparent 0 10px, rgba(255,255,255,.9) 10px 14px), linear-gradient(90deg, transparent, var(--mk-ribbon-a) 15%, #fff 50%, var(--mk-ribbon-b) 85%, transparent);
+  border-radius:20px; box-shadow:0 0 30px var(--mk-ribbon-a), 0 0 60px var(--mk-ribbon-b);
+}
+.mk-battle.is-beam .mk-bt-beam{ animation:mkBeamShot 1.2s ease-out forwards; }
+@keyframes mkBeamShot{ 0%{ transform:rotate(-3deg) scaleX(0); opacity:1 } 30%{ transform:rotate(-3deg) scaleX(1); opacity:1 } 100%{ transform:rotate(-3deg) scaleX(1) scaleY(.1); opacity:0 } }
+.mk-bt-flash{ position:absolute; inset:0; background:#fff; opacity:0; pointer-events:none; }
+.mk-battle.is-hit .mk-bt-flash{ animation:mkBtFlash .5s ease-out; }
+@keyframes mkBtFlash{ 10%{ opacity:.85 } 100%{ opacity:0 } }
+/* แผง HUD ด้านบน (แบบเกมจังหวะ) */
+.mk-bt-info{
+  position:absolute; top:4%; width:min(340px, 42vw); padding:10px 14px; color:#e9fbf9;
+  background:linear-gradient(135deg, rgba(8,16,19,.85), rgba(16,32,36,.85)); border:2px solid rgba(57,197,187,.8); border-radius:14px;
+  box-shadow:0 0 18px rgba(57,197,187,.35), inset 0 0 0 1px rgba(255,255,255,.08); backdrop-filter:blur(4px);
+  opacity:0; transition:opacity .4s .9s;
+}
+.mk-battle.is-in .mk-bt-info{ opacity:1; }
+.mk-bt-info-me{ left:3%; }
+.mk-bt-info-foe{ right:3%; border-color:rgba(255,95,180,.85); box-shadow:0 0 18px rgba(255,95,180,.35), inset 0 0 0 1px rgba(255,255,255,.08); }
+.mk-bt-info b{ font:700 17px/1 'M PLUS Rounded 1c',sans-serif; letter-spacing:.06em; }
+.mk-bt-info b small{ font-size:12px; color:#9cc3c0; }
+.mk-bt-lv{ float:right; font:700 15px/1 'M PLUS Rounded 1c',sans-serif; color:#86cecb; }
+.mk-bt-life{ display:flex; align-items:center; gap:8px; margin-top:8px; }
+.mk-bt-life span{ font:800 11px/1 'M PLUS Rounded 1c',sans-serif; letter-spacing:.12em; color:#39c5bb; }
+.mk-bt-info-foe .mk-bt-life span{ color:#ff5fb4; }
+.mk-bt-track{ flex:1; height:10px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.25); border-radius:6px; overflow:hidden; }
+.mk-bt-fill{ display:block; height:100%; background:repeating-linear-gradient(90deg, #6fe3d9 0 8px, #39c5bb 8px 10px); transition:width 1.1s cubic-bezier(.3,.8,.3,1); }
+.mk-bt-fill.foe{ background:repeating-linear-gradient(90deg, #ff7fbf 0 8px, #e12885 8px 10px); }
+.mk-bt-fill.mid{ filter:saturate(.8) brightness(.9); }
+.mk-bt-fill.low{ background:repeating-linear-gradient(90deg, #ff4f7e 0 8px, #a80850 8px 10px); }
+.mk-bt-num{ text-align:right; margin-top:4px; font:700 15px/1 'M PLUS Rounded 1c',sans-serif; font-variant-numeric:tabular-nums; }
+.mk-bt-exp{ height:4px; margin-top:6px; background:rgba(255,255,255,.1); border-radius:3px; overflow:hidden; }
+.mk-bt-exp i{ display:block; height:100%; width:15%; background:linear-gradient(90deg,#39c5bb,#e12885); transition:width 1.2s ease-out; }
+.mk-battle.is-exp .mk-bt-exp i{ width:85%; }
+/* กล่องเนื้อเพลง (ข้อความล่าง) */
+.mk-bt-dlg{
+  position:relative; margin:0 16px 16px; min-height:80px; padding:18px 44px 18px 24px;
+  background:linear-gradient(135deg, rgba(8,16,19,.92), rgba(19,40,44,.92)); color:#e9fbf9; border:2px solid #39c5bb; border-radius:16px;
+  box-shadow:0 0 24px rgba(57,197,187,.35), inset 0 0 0 1px rgba(255,255,255,.08);
+  font:700 clamp(17px, 2vw, 22px)/1.4 'Mitr',sans-serif; text-align:center;
+}
+.mk-bt-dlg .mk-dlg-next{ opacity:1; color:#ff5fb4; animation:mkNext .6s steps(2) infinite; }
+.mk-bt-skip{ position:absolute; right:22px; bottom:120px; z-index:6; font-size:12px; color:rgba(255,255,255,.7); letter-spacing:.06em; }
+@media (max-width:760px){
+  .mk-bt-me{ width:220px; left:4%; } .mk-bt-me-art{ width:210px; margin-left:-105px; } .mk-bt-foe{ width:200px; right:4%; }
+}
+
+/* ================= MIKU CARD ================= */
+.mk-skucard-ov{ position:fixed; inset:0; z-index:2147482994; display:flex; align-items:center; justify-content:center; padding:16px; background:rgba(0,0,0,.5); animation:mkFade .2s; }
+.mk-skucard-ov.is-out{ animation:mkFadeOut .22s forwards; }
+.mk-skucard{
+  width:min(640px, 100%); padding:14px 16px 16px; color:#14181a;
+  background:linear-gradient(150deg, #39c5bb 0%, #1a9d95 55%, #137a7f 100%); border:3px solid #0f3a3c; border-radius:16px;
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.25), 0 0 0 4px rgba(225,40,133,.55), 0 24px 60px rgba(0,0,0,.5); animation:mkWinIn .4s cubic-bezier(.2,1.2,.3,1);
+  font-family:'Mitr','Leelawadee UI',Tahoma,sans-serif;
+}
+.mk-skucard-top{ display:flex; align-items:center; gap:8px; margin-bottom:12px; color:#fff; }
+.mk-skucard-eq{ display:flex; align-items:flex-end; gap:3px; height:26px; }
+.mk-skucard-eq i{ width:5px; border-radius:2px; background:#fff; animation:mkEq 1s ease-in-out infinite alternate; }
+.mk-skucard-eq i:nth-child(1){ height:40%; } .mk-skucard-eq i:nth-child(2){ height:90%; animation-delay:-.3s; background:#ffd1e8; }
+.mk-skucard-eq i:nth-child(3){ height:60%; animation-delay:-.6s; } .mk-skucard-eq i:nth-child(4){ height:100%; animation-delay:-.15s; background:#ffd1e8; } .mk-skucard-eq i:nth-child(5){ height:50%; animation-delay:-.45s; }
+@keyframes mkEq{ to{ transform:scaleY(.35); } }
+.mk-skucard-eq i{ transform-origin:bottom; }
+.mk-skucard-top b{ margin-left:8px; font:700 20px/1 'M PLUS Rounded 1c',sans-serif; letter-spacing:.2em; text-shadow:0 2px 0 #0f3a3c; }
+.mk-skucard-seen{ margin-left:auto; font:600 12px/1 'M PLUS Rounded 1c',sans-serif; opacity:.9; }
+html body .mk-skucard-x{ all:unset; box-sizing:border-box!important; cursor:pointer; width:32px!important; height:32px!important; min-height:0!important; padding:0!important; text-align:center; line-height:28px!important; font-size:20px!important; color:#fff!important; background:transparent!important; border:2px solid #fff!important; border-radius:50%!important; box-shadow:none!important; clip-path:none!important; }
+.mk-skucard-body{ display:grid; grid-template-columns:200px 1fr; gap:14px; }
+.mk-skucard-screen{ position:relative; padding:10px; border-radius:10px; background:#0f1a1d; border:3px solid #0f3a3c; color:#e9fbf9; }
+.mk-skucard-art{ display:grid; place-items:center; height:150px; border-radius:4px; background:radial-gradient(circle at 50% 70%, #1d3a3e, #0a1214); image-rendering:pixelated; }
+.mk-skucard-art canvas{ width:120px; height:120px; image-rendering:pixelated; animation:mkBuddyBob 1.8s ease-in-out infinite; }
+.mk-skucard-no{ margin-top:6px; font:700 15px/1 'M PLUS Rounded 1c',sans-serif; }
+.mk-skucard-no em{ font-style:normal; padding:1px 6px; border-radius:3px; background:#ff4a9b; color:#fff; font-size:11px; animation:mkNext .7s steps(2) infinite; }
+.mk-skucard-info{ padding:10px 12px; border-radius:8px; background:#1e2a29; color:#c8f8f5; border:4px solid #1b3139; font-family:'M PLUS Rounded 1c','Mitr',sans-serif; }
+.mk-skucard-info h3{ margin:0 0 6px; font-size:20px; letter-spacing:.04em; color:#e8fffd; word-break:break-all; }
+.mk-skucard-types{ display:flex; gap:4px; margin-bottom:8px; }
+.mk-skucard-stat{ display:grid; grid-template-columns:minmax(70px, 40%) 60px 1fr; align-items:center; gap:6px; font-size:12.5px; padding:2px 0; }
+.mk-skucard-stat span{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; opacity:.85; }
+.mk-skucard-stat b{ text-align:right; font-variant-numeric:tabular-nums; }
+.mk-skucard-stat i{ height:7px; border-radius:4px; background:#0e1615; overflow:hidden; }
+.mk-skucard-stat em{ display:block; height:100%; background:linear-gradient(90deg, #4aded4, #c8f84a); }
+.mk-skucard-none{ margin:0; font-size:12px; opacity:.7; }
+.mk-skucard-desc{ margin:12px 0 0; padding:10px 14px; border-radius:8px; background:#e2f9f7; border:3px solid #1b3139; font-size:14px; line-height:1.55; }
+@media (max-width:560px){ .mk-skucard-body{ grid-template-columns:1fr; } }
+
+/* ================= แผง 🌐 ออนไลน์ ================= */
+.mk-on{ width:min(640px, 100%); }
+.mk-on-sec{ padding:10px 0 12px; border-bottom:2px dashed rgba(48,56,58,.2); }
+.mk-on-row{ display:flex; align-items:center; gap:10px; cursor:pointer; font-size:16px; }
+.mk-on-sw{ position:relative; width:46px; height:26px; flex:0 0 auto; }
+.mk-on-sw input{ position:absolute; opacity:0; inset:0; margin:0; cursor:pointer; }
+.mk-on-sw i{ position:absolute; inset:0; border-radius:14px; background:#b0cdcb; border:2px solid #30383a; transition:background .2s; }
+.mk-on-sw i::after{ content:""; position:absolute; left:2px; top:2px; width:18px; height:18px; border-radius:50%; background:#fff; border:2px solid #30383a; transition:transform .2s; }
+.mk-on-sw input:checked + i{ background:var(--mk-trim); }
+.mk-on-sw input:checked + i::after{ transform:translateX(20px); }
+.mk-on-sw input:focus-visible + i{ outline:2px solid var(--mk-ribbon-a); outline-offset:2px; }
+.mk-on-why{ margin:6px 0 6px 56px; font-size:13px; color:#516967; line-height:1.5; }
+.mk-on-why code{ padding:1px 5px; border-radius:3px; background:rgba(48,56,58,.1); font-size:12px; }
+.mk-on-place{ display:flex; align-items:center; gap:8px; margin:4px 0 4px 56px; font-size:13.5px; font-weight:600; }
+html body .mk-on-place select{ padding:4px 8px!important; border:2px solid #30383a!important; border-radius:6px!important; background:#f3fcfb!important; color:#20272a!important; }
+.mk-on-st{ margin:6px 0 0 56px; font-size:13.5px; }
+.mk-on-st.err{ color:#a81a5a; font-weight:600; }
+.mk-on-board{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:8px 0 0 56px; }
+.mk-on-board h4{ margin:0 0 4px; font:700 14px/1.2 'M PLUS Rounded 1c',sans-serif; color:var(--mk-trim); }
+.mk-on-board ol{ margin:0; padding-left:22px; font-size:13px; }
+.mk-on-board li{ display:flex; gap:6px; padding:2px 0; }
+.mk-on-board li span{ flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.mk-on-board li small{ color:#617977; }
+.mk-on-board li.is-me{ font-weight:700; color:#2878c8; }
+.mk-on-empty{ color:#718987; list-style:none; margin-left:-22px; }
+@media (max-width:560px){ .mk-on-board{ grid-template-columns:1fr; margin-left:0; } .mk-on-why, .mk-on-place, .mk-on-st{ margin-left:0; } }
+
+@media (prefers-reduced-motion:reduce){ .mk-buddy, .mk-battle{ display:none!important; } .mk-skucard-eq i{ animation:none; } }

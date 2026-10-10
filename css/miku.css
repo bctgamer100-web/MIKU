@@ -1,0 +1,135 @@
+/* ธีม HATSUNE MIKU · MIKU STUDIO — ชุดสีหลักของทั้งแอป (โหลดหลัง style.css / sunshine.css / theme-light.css จึงทับตัวแปรสีได้)
+   - กลางวัน "DAY STUDIO": พื้นขาวอมมิ้นต์สว่าง · การ์ดขาว · มิ้นต์ #39C5BB เป็นสีหลัก · ชมพู #E12885 เป็นสีเน้น · เทาเงินของชุด
+   - กลางคืน "NIGHT LIVE": พื้นน้ำเงินเข้มแบบฮอลล์คอนเสิร์ต · การ์ดกระจกเข้ม · มิ้นต์เรืองแสง · ชมพูนีออน
+   --mk-trim = สีเน้นเส้น/ขอบ · --mk-ribbon-a/b = ไล่เฉดมิ้นต์→ชมพู (ใช้ทั้งแอป) */
+
+/* ---------- กลางคืน: NIGHT LIVE ---------- */
+:root{
+  --mk-trim:#ff4fa8;
+  --mk-bar-from:#0f2a30;
+  --mk-bar-to:#0a171c;
+  --mk-ribbon-a:#3fe0d4;
+  --mk-ribbon-b:#ff4fa8;
+  --mk-silver:#9fb2bc;
+  --mk-teal-2:#1fa6b8;
+  --mk-pink-2:#ff86c4;
+
+  --background:#0a1418;
+  --sidebar:#0c1a1f;
+  --surface:#112127;
+  --surface-2:#15282f;
+  --surface-3:#1b3239;
+  --border:#244249;
+  --border-soft:#1a3238;
+  --foreground:#e8faf8;
+  --muted:#a3c4c1;
+  --muted-2:#6f9491;
+  --primary:#3fe0d4;
+  --primary-fg:#05201e;
+  --accent:#3fd2c6;
+  --accent-bright:#7ff0e7;
+  --accent-deep:#1ba69c;
+  --accent-fg:#04201e;
+  --accent-soft:rgba(63,210,198,.15);
+  --success:#7ff0c8;
+  --danger:#ff6b9a;
+  --neutral-label:#7fa3a0;
+
+  --v7-bg:#081115;
+  --v7-panel:#112127;
+  --v7-panel-2:#15282f;
+  --v7-panel-3:#0d1a1f;
+  --v7-line:#244249;
+  --v7-line-soft:#1a3238;
+  --v7-text:#e8faf8;
+  --v7-muted:#a3c4c1;
+  --v7-blue:#3fd2c6;
+  --v7-teal:#86cecb;
+  --v7-violet:#ff4fa8;
+  --v7-amber:#ffd27a;
+  --v7-red:#ff5c8f;
+}
+
+/* ---------- กลางวัน: DAY STUDIO ---------- */
+html[data-prod-theme="light"]{
+  --mk-trim:#e12885;
+  --mk-bar-from:#39c5bb;
+  --mk-bar-to:#1e9e96;
+  --mk-ribbon-a:#39c5bb;
+  --mk-ribbon-b:#e12885;
+  --mk-cream:#ffffff;
+  --mk-silver:#8a9aa6;
+  --mk-teal-2:#1a9fae;
+  --mk-pink-2:#f06aa9;
+
+  --background:#f1faf9;
+  --sidebar:#ffffff;
+  --surface:#ffffff;
+  --surface-2:#f6fcfb;
+  --surface-3:#e8f6f4;
+  --border:#d3ece9;
+  --border-soft:#e4f3f1;
+  --foreground:#173537;
+  --muted:#4d6d6b;
+  --muted-2:#7a9592;
+  --primary:#1fb0a6;
+  --primary-fg:#ffffff;
+  --accent:#1fb0a6;
+  --accent-bright:#39c5bb;
+  --accent-deep:#137a7f;
+  --accent-fg:#ffffff;
+  --accent-soft:rgba(57,197,187,.14);
+  --success:#13867f;
+  --danger:#d01f6f;
+  --neutral-label:#5d7f7c;
+
+  --v7-bg:#f1faf9;
+  --v7-panel:#ffffff;
+  --v7-panel-2:#f6fcfb;
+  --v7-panel-3:#eef9f8;
+  --v7-line:#d3ece9;
+  --v7-line-soft:#e4f3f1;
+  --v7-text:#173537;
+  --v7-muted:#4d6d6b;
+  --v7-blue:#1fb0a6;
+  --v7-teal:#39c5bb;
+  --v7-violet:#e12885;
+  --v7-amber:#c48a1c;
+  --v7-red:#d01f6f;
+}
+/* ชื่อแบรนด์: ไล่เฉดตามริบบิ้นของตัว */
+.brand-copy b{
+  letter-spacing:.1em;
+  background:linear-gradient(90deg,var(--mk-ribbon-a),var(--mk-ribbon-b));
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  color:transparent;
+}
+.brand-mark{ color:var(--mk-trim); }
+
+/* ---------- ตัวแปรสำหรับส่วนขยาย "ค้นหาสต็อก" (กล่องใน Shadow DOM สืบทอดตัวแปรจากหน้านี้) ----------
+   ส่วนขยายอ่าน --mkp-* ถ้าหน้าไหนไม่มี (เช่น BigSeller) จะใช้สีฟ้าเดิมของมัน */
+:root{
+  --mkp-bg:var(--surface);
+  --mkp-fg:var(--foreground);
+  --mkp-accent:var(--accent);
+  --mkp-accent-soft:var(--accent-soft);
+  --mkp-accent-fg:var(--accent-fg);
+  --mkp-line:var(--border);
+  --mkp-line2:var(--border);
+  --mkp-line-soft:var(--border-soft);
+  --mkp-muted:var(--muted);
+  --mkp-muted2:var(--muted-2);
+  --mkp-input:var(--background);
+  --mkp-font:'Mitr','Leelawadee UI','Segoe UI',Tahoma,sans-serif;
+  --mkp-radius:12px;
+}
+/* เครดิตภาพตัวละคร (ต้องแสดงตามสัญญาอนุญาต CC BY-NC 3.0) */
+.mk-app-credit{ position:fixed; right:10px; bottom:4px; z-index:5; font:500 10px/1.3 'Mitr',sans-serif; color:var(--muted-2); opacity:.7; pointer-events:auto; }
+.mk-app-credit a{ color:inherit; }
+@media print{ .mk-app-credit{ display:none; } }
+
+/* โลโก้ทางการ 初音ミク แทนตัวอักษรชื่อแบรนด์ */
+.brand-copy b.mk-brand-logo{ display:block; background:none!important; letter-spacing:0; line-height:0; }
+.brand-copy b.mk-brand-logo img{ display:block; height:30px; width:auto; filter:drop-shadow(0 1px 2px rgba(0,0,0,.35)); }

@@ -1,0 +1,155 @@
+/* MIKU EXTRA — คู่กับ js/mk-settings.js, js/mk-progress.js, js/mk-extra.js */
+
+/* ================= โหมดโฟกัส: ซ่อนของหนัก/ดึงความสนใจ ================= */
+html.mk-focus #mkSky, html.mk-focus #mkSinger, html.mk-focus #mkWeather, html.mk-focus #mkFest,
+html.mk-focus .mk-combo, html.mk-focus body::before{ display:none!important; }
+html.mk-focus .ms-card, html.mk-focus .ms-head{ animation:none!important; }
+
+/* ================= ศูนย์ตั้งค่า ================= */
+.mk-set{ width:min(720px, 100%); }
+.mk-set-top{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:8px; }
+html body .mk-set .mk-set-focus{
+  display:flex!important; flex-direction:column; align-items:flex-start; gap:4px; text-align:left!important; padding:12px 14px!important;
+  background:#cdeae8!important; border:2px solid #30383a!important;
+}
+html body .mk-set .mk-set-focus b{ font:700 16px/1.2 'M PLUS Rounded 1c','Mitr',sans-serif; }
+html body .mk-set .mk-set-focus small{ font:500 12.5px/1.4 'Mitr',sans-serif; color:#516967; }
+html body .mk-set .mk-set-focus.is-on{ background:linear-gradient(135deg, #a6faf5, #62ebe2)!important; box-shadow:0 0 0 3px var(--mk-trim)!important; }
+.mk-set-perf{ display:flex; align-items:center; gap:12px; padding:10px 14px; border-radius:6px; background:rgba(48,56,58,.08); border:2px solid rgba(48,56,58,.25); }
+.mk-perf-fps{ text-align:center; min-width:70px; }
+.mk-perf-fps b{ display:block; font:700 30px/1 'M PLUS Rounded 1c',sans-serif; }
+.mk-perf-fps small{ font-size:11px; font-weight:700; }
+.mk-perf-fps.is-g b{ color:#2a9a93; } .mk-perf-fps.is-y b{ color:#12beb3; } .mk-perf-fps.is-r b{ color:#c01a65; }
+.mk-perf-info{ display:flex; flex-direction:column; gap:3px; font-size:12.5px; color:#30444a; }
+.mk-set-auto{ display:flex; align-items:center; gap:8px; margin:2px 0 6px; font-size:13px; font-weight:600; color:#30444a; }
+.mk-set-list{ display:grid; grid-template-columns:1fr 1fr; gap:4px 18px; }
+.mk-set-sec h4{ display:flex; align-items:center; gap:8px; margin:12px 0 4px; font:700 14px/1 'M PLUS Rounded 1c','Mitr',sans-serif; letter-spacing:.06em; color:var(--mk-trim); }
+.mk-set-sec h4 i{ font-style:normal; }
+html body .mk-set .mk-set-row{
+  display:flex!important; align-items:center; gap:10px; width:100%; margin:0 0 4px!important; padding:8px 10px!important; text-align:left!important;
+  background:transparent!important; border:0!important; border-bottom:1px solid rgba(48,56,58,.15)!important; border-radius:4px!important;
+}
+html body .mk-set .mk-set-row:hover{ background:rgba(86,246,235,.18)!important; }
+.mk-set-txt{ flex:1; display:flex; flex-direction:column; gap:2px; min-width:0; }
+.mk-set-txt b{ font:700 14px/1.25 'Mitr',sans-serif; color:#20272a; }
+.mk-set-txt small{ font:500 12px/1.35 'Mitr',sans-serif; color:#617977; }
+.mk-set-sw{ position:relative; width:42px; height:24px; flex:0 0 auto; border-radius:13px; background:#b0cdcb; border:2px solid #30383a; transition:background .2s; }
+.mk-set-sw i{ position:absolute; left:2px; top:2px; width:16px; height:16px; border-radius:50%; background:#fff; border:2px solid #30383a; transition:transform .2s; }
+.mk-set-sw.is-on{ background:var(--mk-trim); }
+.mk-set-sw.is-on i{ transform:translateX(18px); }
+.mk-set-go{ font:700 13px/1 'Mitr',sans-serif; color:var(--mk-trim); }
+@media (max-width:640px){ .mk-set-top, .mk-set-list{ grid-template-columns:1fr; } }
+
+/* ================= ภารกิจ · ปฏิทินสถิติ · ตู้เสื้อผ้า (ในบัตรโปรดิวเซอร์) ================= */
+.mk-qpill{ margin-left:2px; padding:1px 6px; border-radius:8px; font:700 10px/1.4 'M PLUS Rounded 1c',sans-serif; color:#080f12; -webkit-text-fill-color:#080f12; background:var(--mk-ribbon-a); white-space:nowrap; }
+.mk-qpill.is-done{ background:linear-gradient(90deg, #a6faf5, #78c850); }
+.mk-tc h5{ display:flex; align-items:baseline; gap:10px; margin:14px 0 8px; font:700 15px/1.2 'M PLUS Rounded 1c','Mitr',sans-serif; color:#20272a; }
+.mk-tc h5 small{ font:600 12px/1 'Mitr',sans-serif; color:#617977; }
+.mk-q{ display:grid; grid-template-columns:1fr 120px 64px; align-items:center; gap:10px; padding:5px 0; font-size:13.5px; }
+.mk-q i{ height:8px; border-radius:5px; background:#b8d6d4; overflow:hidden; border:1px solid rgba(48,56,58,.25); }
+.mk-q em{ display:block; height:100%; background:linear-gradient(90deg, var(--mk-ribbon-b), var(--mk-ribbon-a)); }
+.mk-q b{ text-align:right; font-variant-numeric:tabular-nums; }
+.mk-q.is-done span{ color:#2a8a84; font-weight:700; }
+.mk-q.is-done em{ background:linear-gradient(90deg, #4ac8c0, #9be070); }
+.mk-heat{ display:grid; grid-auto-flow:column; grid-template-rows:repeat(7, 12px); grid-auto-columns:12px; gap:3px; overflow-x:auto; padding-bottom:4px; }
+.mk-heat i, .mk-heat-key i{ display:block; width:12px; height:12px; border-radius:2px; }
+.mk-heat .l0, .mk-heat-key .l0{ background:#c4e0de; }
+.mk-heat .l1, .mk-heat-key .l1{ background:#8ff1ea; }
+.mk-heat .l2, .mk-heat-key .l2{ background:#52ebe0; }
+.mk-heat .l3, .mk-heat-key .l3{ background:#33ded3; }
+.mk-heat .l4, .mk-heat-key .l4{ background:#c01a65; }
+.mk-heat-key{ display:flex; align-items:center; gap:3px; margin-top:6px; font-size:11px; color:#617977; }
+.mk-wd{ display:flex; flex-wrap:wrap; gap:8px; }
+html body .mk-tc .mk-wd button{ display:flex!important; flex-direction:column; align-items:center; gap:2px; width:76px; padding:8px 4px!important; }
+html body .mk-tc .mk-wd button i{ font-style:normal; font-size:24px; line-height:1; }
+html body .mk-tc .mk-wd button span{ font-size:11.5px; }
+html body .mk-tc .mk-wd button.is-on{ background:linear-gradient(135deg, #a6faf5, #62ebe2)!important; box-shadow:0 0 0 3px var(--mk-trim)!important; }
+html body .mk-tc .mk-wd button:disabled{ opacity:.45; cursor:not-allowed; }
+
+/* ของแต่งคู่หู (หัวอยู่ฝั่งขวาเป็นค่าเริ่ม · acc-left = หันซ้าย) */
+.mk-buddy-acc{ position:absolute; z-index:3; pointer-events:none; font-size:26px; line-height:1; right:14px; top:8px; filter:drop-shadow(0 2px 2px rgba(0,0,0,.4)); transition:left .3s, right .3s; }
+.mk-buddy.acc-left .mk-buddy-acc{ right:auto; left:14px; }
+.mk-buddy-acc.is-scarf{ top:38px; font-size:24px; }
+.mk-buddy-acc.is-shades{ top:22px; font-size:20px; }
+.mk-buddy-acc.is-crown, .mk-buddy-acc.is-hat{ top:-4px; }
+.mk-buddy-acc.is-halo{ top:-10px; font-size:24px; animation:mkBuddyBob 2s ease-in-out infinite; }
+.mk-buddy-acc:empty{ display:none; }
+
+/* ================= บอสประจำสัปดาห์ (แบนเนอร์หน้าตรวจ) ================= */
+html body .ms-hud .mk-boss{
+  all:unset; box-sizing:border-box; cursor:pointer; display:flex; flex-direction:column; gap:3px; min-width:170px; padding:9px 16px 9px 14px;
+  background:linear-gradient(160deg, rgba(29,53,61,.6), rgba(6,12,14,.45)); border:1px solid rgba(255,80,159,.55); 
+  border-radius:16px; color:#e6f9f8;
+}
+.mk-boss small{ font:700 11px/1 'Mitr',sans-serif; letter-spacing:.04em; opacity:.85; }
+.mk-boss b{ font:700 18px/1.1 'M PLUS Rounded 1c',sans-serif; color:#fff; text-shadow:0 0 12px rgba(255,60,148,.7); }
+.mk-boss span{ font-size:11.5px; opacity:.85; }
+
+/* ================= สรุปประจำสัปดาห์ ================= */
+.mk-week{ width:min(560px, 100%); }
+.mk-week-img{ display:block; width:auto; max-width:100%; height:auto; max-height:calc(100vh - 210px); margin:0 auto; border-radius:8px; border:3px solid #30383a; background:#111; }
+
+/* ================= นักร้องลึกลับมาท้าดวล ================= */
+.mk-visit{ position:fixed; inset:0; z-index:2147482982; pointer-events:none; overflow:hidden; }
+.mk-visit-shade{ position:absolute; inset:0; animation:mkFade 1s; }
+.mk-visit.is-kaito .mk-visit-shade{ background:radial-gradient(ellipse at 50% 110%, rgba(255,20,126,.45), transparent 60%); }
+.mk-visit.is-luka .mk-visit-shade{ background:radial-gradient(ellipse at 50% 110%, rgba(30,90,255,.45), transparent 60%); }
+.mk-visit-art{ position:absolute; left:50%; bottom:-10px; width:min(70vw, 760px); transform:translate(-50%, 100%); animation:mkVisitRise 2.4s cubic-bezier(.2,.8,.3,1) forwards; }
+.mk-visit-art svg{ width:100%; display:block; fill:rgba(4,7,8,.88); filter:drop-shadow(0 0 30px rgba(0,0,0,.6)); }
+.mk-visit .eye{ fill:#ff1a81; filter:drop-shadow(0 0 8px #ff1a81); animation:mkMtBlink 1.6s steps(2) infinite; }
+.mk-visit.is-luka .eye{ fill:#53f6eb; filter:drop-shadow(0 0 8px #53f6eb); }
+.mk-visit .eye-line{ fill:none; stroke:rgba(83,246,235,.7); stroke-width:4; }
+@keyframes mkVisitRise{ to{ transform:translate(-50%, 18%); } }
+.mk-visit.is-flee .mk-visit-art{ animation:none; transform:translate(-50%, 110%); transition:transform 1.6s cubic-bezier(.6,0,.8,.4); }
+.mk-visit.is-flee .mk-visit-shade{ opacity:0; transition:opacity 1.5s; }
+body.mk-rumble .shell{ animation:mkQuake .5s linear infinite; }
+
+/* ================= เทศกาล ================= */
+#mkFest{ position:fixed; inset:0; z-index:57; pointer-events:none; }
+.mk-fest-tag{ display:inline-flex; align-items:center; gap:6px; padding:4px 10px; margin-left:4px; white-space:nowrap; font-size:16px;
+  background:rgba(0,0,0,.25); border:1px solid color-mix(in srgb, var(--mk-ribbon-a) 50%, transparent); border-radius:14px; }
+.mk-fest-tag b{ font:700 12px/1 'Mitr',sans-serif; color:var(--mk-ribbon-a); }
+@media (max-width:1599px){ .mk-fest-tag b{ display:none; } }
+.mk-fest-garland{ position:fixed; left:0; right:0; top:0; z-index:79; height:30px; display:flex; justify-content:space-around; pointer-events:none; }
+.mk-fest-garland i{ width:14px; height:20px; margin-top:6px; border-radius:50% 50% 45% 45%; animation:mkGarland 1.6s ease-in-out infinite alternate; }
+.mk-fest-garland i:nth-child(odd){ animation-delay:.8s; }
+.mk-fest-garland.is-cny i{ width:18px; height:22px; background:radial-gradient(circle at 40% 35%, #ff5aa4, #c0105f); box-shadow:0 0 12px rgba(255,40,137,.8); border:2px solid #56f6eb; }
+.mk-fest-garland.is-xmas i:nth-child(3n){ background:#ff4a9b; box-shadow:0 0 12px #ff4a9b; }
+.mk-fest-garland.is-xmas i:nth-child(3n+1){ background:#4aded4; box-shadow:0 0 12px #4aded4; }
+.mk-fest-garland.is-xmas i:nth-child(3n+2){ background:#53f6eb; box-shadow:0 0 12px #53f6eb; }
+@keyframes mkGarland{ to{ opacity:.45; transform:translateY(2px); } }
+
+/* ================= รหัสลับ ================= */
+.mk-laser{ position:fixed; inset:0; z-index:2147483050; pointer-events:none; display:grid; place-items:center; overflow:hidden; }
+.mk-laser-beam{ position:absolute; left:-10%; right:-10%; top:50%; height:180px; margin-top:-90px;
+  background:linear-gradient(180deg, transparent, var(--mk-ribbon-b) 20%, #fff 45%, #fff 55%, var(--mk-ribbon-a) 80%, transparent);
+  box-shadow:0 0 80px var(--mk-ribbon-a), 0 0 160px var(--mk-ribbon-b); transform:scaleY(0); animation:mkLaser 1.5s cubic-bezier(.2,.9,.3,1) forwards; }
+.mk-laser-core{ position:absolute; inset:0; background:#fff; opacity:0; animation:mkModFlash .9s ease-out .15s forwards; }
+.mk-laser b{ position:relative; z-index:2; font:700 clamp(40px, 8vw, 110px)/1 'M PLUS Rounded 1c',sans-serif; font-style:italic; letter-spacing:.06em; color:#fff;
+  text-shadow:0 0 30px var(--mk-ribbon-b), 0 6px 0 rgba(0,0,0,.4); animation:mkModTitle .6s cubic-bezier(.2,1.4,.3,1) both, mkFadeOut .4s 1.1s forwards; }
+@keyframes mkLaser{ 0%{ transform:scaleY(0) } 20%{ transform:scaleY(1.1) } 70%{ transform:scaleY(1); opacity:1 } 100%{ transform:scaleY(.05); opacity:0 } }
+/* สลับสีพิเศษ (sparkle): ภาพมิกุในแบนเนอร์สลับเป็นอีกสี */
+/* คลัง MIKU CARD */
+.mk-album{ width:min(720px, 100%); }
+html body .mk-album .mk-album-q{ width:100%; margin:0 0 10px; padding:8px 12px!important; border:3px solid #1b3139!important; border-radius:8px!important; background:#e2f9f7!important; color:#20272a!important; font:600 14px/1.2 'Mitr',sans-serif!important; }
+.mk-album-list{ display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:8px; max-height:60vh; overflow:auto; padding:4px; background:#1e2a29; border:4px solid #1b3139; border-radius:8px; }
+html body .mk-album-list button{
+  all:unset; box-sizing:border-box; cursor:pointer; display:flex; flex-direction:column; gap:2px; padding:8px 10px!important; border-radius:6px!important;
+  background:#2a3a39!important; color:#c8f8f5!important; font:700 13px/1.25 'M PLUS Rounded 1c',sans-serif!important; word-break:break-all;
+}
+html body .mk-album-list button:hover{ background:#3a5a58!important; }
+.mk-album-list small{ font-size:10.5px; opacity:.7; }
+.mk-album-list p{ grid-column:1/-1; color:#c8f8f5; margin:12px; }
+
+/* ================= ป้ายสต็อกใกล้หมด ================= */
+#sunOutput td.mk-low1, #sunOutput td.mk-low0{ position:relative; font-weight:700; }
+#sunOutput td.mk-low1{ color:#0cdcce!important; }
+#sunOutput td.mk-low0{ color:#ff4a9b!important; }
+#sunOutput td.mk-low1::after, #sunOutput td.mk-low0::after{
+  display:inline-block; margin-left:6px; padding:1px 5px; border-radius:3px; vertical-align:1px;
+  font:700 9.5px/1.3 'M PLUS Rounded 1c',sans-serif; letter-spacing:.04em; color:#fff; -webkit-text-fill-color:#fff;
+}
+#sunOutput td.mk-low1::after{ content:"⚠ ใกล้หมด"; background:#12beb3; }
+#sunOutput td.mk-low0::after{ content:"🔇 หมดสต็อก"; background:#a81a5a; }
+
+@media (prefers-reduced-motion:reduce){ .mk-visit, .mk-laser, #mkFest{ display:none!important; } }
