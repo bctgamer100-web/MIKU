@@ -35,7 +35,7 @@
   /* ================= โหมดโฟกัส ================= */
   var FKEY = 'mk_focus_v1';
   // สิ่งที่ปิดตอนโฟกัส: [id ปุ่มเดิม] — จำสถานะก่อนเปิดไว้ คืนค่าเมื่อปิดโฟกัส
-  var FOCUS_OFF = ['mk3dToggle', 'mkSwoopToggle'];
+  var FOCUS_OFF = ['mk3dToggle'];
   function setFocus(v, why) {
     var st = {};
     try { st = JSON.parse(ls(FKEY) || '{}'); } catch (e) { /* ข้าม */ }
@@ -64,7 +64,6 @@
     ['ภาพ', '🎨', [
       ['เอฟเฟกต์ MIKU (FX)', 'สปอตไลต์ โน้ตลอย ประกายดาว และฉากทั้งหมด — ปิดแล้วเหลือแค่ธีมสี', 'btn', 'mkFxToggle'],
       ['ฉาก 3D', 'ฮอลล์คอนเสิร์ต 3 มิติ การ์ดกระจก การ์ดเอียงตามเมาส์ (กินเครื่องที่สุด)', 'btn', 'mk3dToggle'],
-      ['MIKU ไถลผ่านตอนเปลี่ยนหน้า', 'มิกุลากบรรทัดโน้ตผ่านจอตอนกดแท็บ', 'btn', 'mkSwoopToggle'],
       ['เทศกาล', 'ตกแต่งตามวันสำคัญ (สงกรานต์ ลอยกระทง ตรุษจีน คริสต์มาส ปีใหม่)', 'flag', 'mk_fest_v1']
     ]],
     ['เพลง', '🎵', [
@@ -117,7 +116,6 @@
     if (root.classList.contains('mk-fx-on')) on.push('FX');
     if (btnOn('mk3dToggle')) on.push('3D');
     if (btnOn('mkBgmToggle')) on.push('เพลง');
-    if (btnOn('mkSwoopToggle')) on.push('ฉากเปลี่ยนหน้า');
     if (btnOn('mkBuddyToggle')) on.push('คู่หู');
     var tips = [];
     if (fps < 40) {

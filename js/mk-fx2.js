@@ -103,6 +103,7 @@
   }
 
   function fly(kind) {
+    return null; // ปิดถาวร: ไม่มีมิกุลอยผ่านจอแล้ว (ผู้ใช้ขอเอาออก)
     if (!on() && kind !== 'beam') return;
     if (kind !== 'beam' && root.classList.contains('mk-focus') && !fly.force) return; // โหมดโฟกัส: ไม่บินผ่านเอง
     if (singer && kind !== 'beam') return;

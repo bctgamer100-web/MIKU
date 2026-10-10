@@ -298,7 +298,6 @@
     ['mkBuddyToggle', 'คู่หู MIKU'],
     ['mkBattleToggle', 'โหมดต่อสู้ (ตรวจ ORDER)'],
     ['mkOnlineBtn', 'ออนไลน์ (อากาศจริง · อันดับ · เสียง)'],
-    ['mkSwoopToggle', 'ฉาก MIKU ไถลผ่านตอนเปลี่ยนหน้า']
   ];
   function buildDock() {
     var bar = document.querySelector('.shell > .top:not(.side-right)');

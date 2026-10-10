@@ -103,6 +103,7 @@
   var swoopOn = ls(SW_KEY) !== '0';
   var lastSwoop = 0;
   function swoop() {
+    return; // ปิดถาวร: ไม่มีมิกุไถลผ่านจอตอนเปลี่ยนหน้าแล้ว
     if (!swoopOn || !on() || busy() || root.classList.contains('mk-focus') || Date.now() - lastSwoop < 700) return;
     lastSwoop = Date.now();
     var dir = Math.random() < 0.5 ? 1 : -1;
@@ -128,20 +129,6 @@
     c.style.setProperty('--hy', ((e.clientY - r.top) / r.height * 100).toFixed(1) + '%');
   }, { passive: true });
 
-  /* ---------- ปุ่มในเมนู ✦ (ฉากเปลี่ยนหน้า) ---------- */
-  function addButtons() {
-    var bar = document.querySelector('.shell > .top:not(.side-right)');
-    if (!bar) return;
-    if (!document.getElementById('mkSwoopToggle')) {
-      var b = el('button', 'mk-fx-toggle mk-sound-toggle');
-      b.type = 'button'; b.id = 'mkSwoopToggle';
-      var paint = function () { b.textContent = '💨'; b.setAttribute('aria-pressed', String(swoopOn)); b.classList.toggle('is-off', !swoopOn); };
-      b.addEventListener('click', function () { swoopOn = !swoopOn; ls(SW_KEY, swoopOn ? '1' : '0'); paint(); });
-      paint();
-      bar.appendChild(b);
-    }
-  }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', addButtons); else addButtons();
 
   window.MKEPIC = { moduleChange: moduleChange, combo: function () { return combo; }, hit: hit, swoop: swoop };
 })();

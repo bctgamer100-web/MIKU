@@ -286,7 +286,7 @@ html:not([data-prod-theme="light"]) .ms-head-actions .sun-imp-bar{ background:rg
   position:absolute; z-index:-1; right:8px; bottom:0; height:100%; max-height:300px; width:auto; pointer-events:none; user-select:none;
   filter:drop-shadow(0 8px 16px rgba(0,0,0,.22));
 }
-html.mk-fx-on .ms-head-miku{ animation:msMikuBob 4s ease-in-out infinite; }
+
 @keyframes msMikuBob{ 50%{ transform:translateY(-6px) rotate(-1deg); } }
 @media (max-width:1100px){ .ms-head{ padding-right:170px; } .ms-head-miku{ right:-20px; } }
 @media (max-width:640px){ .ms-head{ grid-template-columns:1fr; grid-template-areas:"main" "actions"; padding:18px; } .ms-jacket{ display:none; } .ms-head-miku{ opacity:.25; } }

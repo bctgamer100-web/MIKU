@@ -158,6 +158,7 @@
 
   /* ---------- หมุนตัวเต้นรอบจอ (ภารกิจสำเร็จ) ---------- */
   function flyAround() {
+    return; // ปิดถาวร: คู่หูไม่บินวนรอบจอแล้ว อยู่ที่มุมจอเฉยๆ
     if (!visible() || !el.animate) return;
     var r = el.getBoundingClientRect(), W = window.innerWidth, H = window.innerHeight;
     var hx = r.left, hy = r.top;
