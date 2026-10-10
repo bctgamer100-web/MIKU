@@ -152,9 +152,9 @@
     ['NocXEwsJGOQ', 'Miku', 'Anamanaguchi feat. 初音ミク']
   ];
   var RADIO_KEY = 'mk_radio_v1';
-  var R = { i: 0, shuffle: false };
-  try { var rs = JSON.parse(ls(RADIO_KEY) || 'null'); if (rs) { R.i = Math.min(PLAYLIST.length - 1, Math.max(0, rs.i | 0)); R.shuffle = !!rs.shuffle; } } catch (e) { /* ข้าม */ }
-  function saveR() { ls(RADIO_KEY, JSON.stringify({ i: R.i, shuffle: R.shuffle })); }
+  var R = { i: 0, shuffle: false, mini: false };
+  try { var rs = JSON.parse(ls(RADIO_KEY) || 'null'); if (rs) { R.i = Math.min(PLAYLIST.length - 1, Math.max(0, rs.i | 0)); R.shuffle = !!rs.shuffle; R.mini = !!rs.mini; } } catch (e) { /* ข้าม */ }
+  function saveR() { ls(RADIO_KEY, JSON.stringify({ i: R.i, shuffle: R.shuffle, mini: R.mini })); }
   var radio = null, yt = null, ytReady = false, playing = false, mBtn = null, apiLoading = false, waitPlay = false;
   var localFile = location.protocol === 'file:';
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -165,7 +165,9 @@
     radio.className = 'mk-radio';
     radio.setAttribute('aria-label', 'MIKU RADIO');
     radio.innerHTML =
-      '<header class="mk-radio-head"><b>♪ MIKU RADIO</b><button type="button" class="mk-radio-x" title="ปิดวิทยุ (หยุดเพลง)" aria-label="ปิด">×</button></header>' +
+      '<header class="mk-radio-head"><b>♪ MIKU RADIO</b><span class="mk-radio-btns">' +
+      '<button type="button" class="mk-radio-min" title="หุบ / ขยายเครื่องเล่น" aria-label="หุบหรือขยายเครื่องเล่น">▾</button>' +
+      '<button type="button" class="mk-radio-x" title="ปิดวิทยุ (หยุดเพลง)" aria-label="ปิด">×</button></span></header>' +
       '<div class="mk-radio-screen"><div id="mkRadioYT"></div>' +
       '<button type="button" class="mk-radio-cover" title="เล่นเพลง"><img alt="" src="img/miku-logo.png?v=miku14"><span>▶ กดเพื่อเล่นเพลงมิกุ</span></button></div>' +
       '<div class="mk-radio-now"><b></b><small></small></div>' +
@@ -184,6 +186,7 @@
     radio.addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b) return;
       if (b.classList.contains('mk-radio-x')) { closeRadio(); return; }
+      if (b.classList.contains('mk-radio-min')) { R.mini = !R.mini; saveR(); radio.classList.remove('show-list'); paintRadio(); return; }
       if (b.classList.contains('mk-radio-cover')) { play(R.i); return; }
       if (b.dataset.k != null) { play(+b.dataset.k); return; }
       var a = b.dataset.a;
@@ -208,6 +211,9 @@
       radio.querySelector('.mk-radio-play').textContent = playing ? '⏸' : '▶';
       radio.querySelector('.mk-radio-shuf').classList.toggle('is-on', R.shuffle);
       radio.classList.toggle('is-playing', playing);
+      radio.classList.toggle('is-mini', R.mini);
+      var mn = radio.querySelector('.mk-radio-min');
+      mn.textContent = R.mini ? '▴' : '▾'; mn.title = R.mini ? 'ขยายเครื่องเล่น' : 'หุบเครื่องเล่น (เพลงยังเล่นต่อ)';
       radio.querySelectorAll('.mk-radio-list button').forEach(function (b) { b.classList.toggle('is-on', +b.dataset.k === R.i); });
     }
     if (mBtn) {
